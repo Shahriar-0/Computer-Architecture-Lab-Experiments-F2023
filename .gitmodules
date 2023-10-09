@@ -1,0 +1,6 @@
+[submodule "Archive/V1"]
+	path = Archive/V1
+	url = https://github.com/MisaghM/Computer-Architecture-Lab-Projects.git
+[submodule "Archive/V2"]
+	path = Archive/V2
+	url = https://github.com/alumpish/CA-Lab-Projects.git
