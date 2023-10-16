@@ -301,6 +301,11 @@ input          TD_CLK27;            //	TV Decoder 27MHz CLK
 ////////////////////////	GPIO	////////////////////////////////
 inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
-
 	
+
+	wire[31:0] PCPlus4, instruction;
+	
+	IF instructionetch(
+		.PCPlus4(PCPlus4), .instruction(instruction), .clk(CLOCK_50), .rst(SW[0])
+	) //FIXME add signals
 endmodule
