@@ -7,7 +7,7 @@ module RegIF_ID(clk, rst, en, clr, instrF, PCF,
 
     output reg [31:0] instrD, PCD, PCPlus4D;
     
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk or negedge rst) begin
         
         if(rst || clr) begin
             instrD   <= 32'b0;
