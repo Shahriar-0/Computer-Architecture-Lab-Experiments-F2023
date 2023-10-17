@@ -7,10 +7,12 @@ module Register(in, clk, en, rst, out);
     output reg [N-1:0] out;
     
     always @(posedge clk or posedge rst) begin
-        if(negedge rst)
+
+        if (negedge rst)
             out <= {N{1'b0}};
-        else if(en)
+        else if (en)
             out <= in;
+            
     end
 
 endmodule

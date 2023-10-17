@@ -9,13 +9,13 @@ module RegIF_ID(clk, rst, en, clr, instrF, PCF,
     
     always @(posedge clk or negedge rst) begin
         
-        if(rst || clr) begin
+        if (rst || clr) begin
             instrD   <= 32'b0;
             PCD      <= 32'b0;
             PCPlus4D <= 3'b0;
         end 
 
-        else if(en) begin
+        else if (en) begin
             instrD   <= instrF;
             PCD      <= PCF;
             PCPlus4D <= PCPlus4F;

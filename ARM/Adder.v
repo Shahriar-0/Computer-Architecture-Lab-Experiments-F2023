@@ -1,11 +1,10 @@
-module Adder(a, b, w);
+module Adder(a, b, out);
     parameter N = 32;
 
-    input [N-1:0] a;
-    input [N-1:0] b;
+    input [N-1:0] a, b;
     
-    output [N-1:0] w;
+    output [N-1:0] out;
     
-    assign w = a + b;
+    assign out = a + b;
     
 endmodule
