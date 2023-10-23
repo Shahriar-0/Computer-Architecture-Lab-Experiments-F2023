@@ -1,7 +1,9 @@
 module IF_Stage(clk, rst, PCF, instructionF, freezeF, branchAdderF, branchTakenF);
     parameter N = 32;
 
-    input clk, rst, freezeF, branchAdderF, branchTakenF;
+    input clk, rst, freezeF, branchTakenF;
+    
+    input[N-1:0] branchAdderF;
 
     output[N - 1:0] PCF, instructionF;
     
