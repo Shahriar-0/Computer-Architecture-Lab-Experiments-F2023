@@ -303,15 +303,15 @@ inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 	
 
-	wire[31:0] PCPlus4, PCD, PCEX, PCMEM, PCWB, PCF, instruction;
+	wire[31:0] PCPlus4, PCD, PCEX, PCMEM, PCWB, PCF, instructionF, instructionD;
 	
 	IF_Stage instFetch(
-		.PCPlus4(PCPlus4), .instruction(instruction), .clk(CLOCK_50), .rst(SW[0])
+		.PCF(PCPlus4), .instructionF(instructionF), .clk(CLOCK_50), .rst(SW[0])
 	); //FIXME add signals
 
-	IF_Stage_Reg instFetchReg(.clk(CLOCK_50), .rst(SW[0]), .PCF(PCPlus4), .PCD(PCD));
+	IF_Stage_Reg instFetchReg(.clk(CLOCK_50), .rst(SW[0]), .en(1), .clr(0), .instrF(instructionF), .instrD(instructionD), .PCF(PCPlus4), .PCD(PCD));
 
-	ID_stage instDecode(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
+	ID_Stage instDecode(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
 
 	ID_Stage_Reg instDecodeReg(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
 

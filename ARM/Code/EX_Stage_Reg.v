@@ -2,7 +2,7 @@
 module EXE_Stage_Reg(clk, rst, PCEX, PCMEM);
 
     input wire[0:0] clk, rst;
-    inpit wire[0:31] PCEX;
+    input wire[0:31] PCEX;
     output reg[0:31] PCMEM;
 
     always@(posedge clk or posedge rst) begin
