@@ -1,13 +1,13 @@
 
-module MEM_Stage_Reg(clk, rst, pc_in, pc);
+module MEM_Stage_Reg(clk, rst, PCMEM, PCWB);
 
     input wire[0:0] clk, rst;
-    inpit wire[0:31] pc_in;
-    output reg[0:31] pc;
+    inpit wire[0:31] PCMEM;
+    output reg[0:31] PCWB;
 
-    always@(posedge clk, posedge rst) begin
+    always@(posedge clk or posedge rst) begin
 
-    pc = (rst) ? 32'b0 : pc_in;
+    PCWB = (rst) ? 32'b0 : PCMEM;
 
     end
 

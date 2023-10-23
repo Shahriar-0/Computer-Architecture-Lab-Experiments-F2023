@@ -1,13 +1,13 @@
 
-module EXE_Stage_Reg(clk, rst, pc_in, pc);
+module EXE_Stage_Reg(clk, rst, PCEX, PCMEM);
 
     input wire[0:0] clk, rst;
-    inpit wire[0:31] pc_in;
-    output reg[0:31] pc;
+    inpit wire[0:31] PCEX;
+    output reg[0:31] PCMEM;
 
-    always@(posedge clk, posedge rst) begin
+    always@(posedge clk or posedge rst) begin
 
-    pc = (rst) ? 32'b0 : pc_in;
+    PCMEM = (rst) ? 32'b0 : PCEX;
 
     end
 
