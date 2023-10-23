@@ -1,5 +1,4 @@
-module IF_Stage_Reg(clk, rst, en, clr, instrF, PCF, 
-                    PCPlus4F, PCPlus4D, instrD, PCD);
+module IF_Stage_Reg(clk, rst, en, clr, instrF, PCF, instrD, PCD);
     
     input clk, rst, clr, en;
     input [31:0] instrF, PCF, PCPlus4F;
