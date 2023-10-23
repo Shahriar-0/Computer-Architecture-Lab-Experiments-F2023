@@ -5,3 +5,6 @@ output_files/
 *.bak
 *.qws
 *.qpf
+*.mti
+*.mpf
+work/
