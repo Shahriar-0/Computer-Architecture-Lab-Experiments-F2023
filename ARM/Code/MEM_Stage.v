@@ -1,9 +1,9 @@
 
-module MEM_Stage(clk, rst, pc_in, pc);
+module MEM_Stage(clk, rst, PCMEM, PCWB);
 
     input wire[0:0] clk, rst;
-    inpit wire[0:31] pc_in;
-    output wire[0:31] pc;
+    inpit wire[0:31] PCMEM;
+    output wire[0:31] PCWB;
 
-    assign pc = pc_in;
+    assign PCWB = PCMEM;
 endmodule

@@ -1,9 +1,9 @@
 
-module ID_Stage(clk, rst, pc_in, pc);
+module ID_Stage(clk, rst, PCD, PCEX);
 
     input wire[0:0] clk, rst;
-    inpit wire[0:31] pc_in;
-    output wire[0:31] pc;
+    inpit wire[0:31] PCD;
+    output wire[0:31] PCEX;
 
-    assign pc = pc_in;
+    assign PCEX = PCD;
 endmodule

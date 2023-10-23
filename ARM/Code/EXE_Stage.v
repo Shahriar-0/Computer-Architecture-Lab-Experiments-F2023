@@ -1,9 +1,9 @@
 
-module EXE_Stage(clk, rst, pc_in, pc);
+module EXE_Stage(clk, rst, PCEX, PCMEM);
 
     input wire[0:0] clk, rst;
-    inpit wire[0:31] pc_in;
-    output wire[0:31] pc;
+    input wire[0:31] PCEX;
+    output wire[0:31] PCMEM;
 
-    assign pc = pc_in;
+    assign PCMEM = PCEX;
 endmodule
