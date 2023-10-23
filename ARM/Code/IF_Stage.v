@@ -23,7 +23,7 @@ module IF_Stage(clk, rst, PCF, instructionF, freezeF, branchAdderF, branchTakenF
     ); 
 
     Register PC(    
-        .in(PCRegIn), .clk(clk), .en(freezeF), .rst(rst), .out(PCRegOut)
+        .in(PCRegIn), .clk(clk), .en(~freezeF), .rst(rst), .out(PCRegOut)
     ); 
 
     assign PCF = PCPlus4F;

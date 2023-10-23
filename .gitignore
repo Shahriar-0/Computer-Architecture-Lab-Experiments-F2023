@@ -7,4 +7,5 @@ output_files/
 *.qpf
 *.mti
 *.mpf
+*.wlf
 work/

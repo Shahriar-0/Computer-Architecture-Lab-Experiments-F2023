@@ -8,9 +8,10 @@ module Testbench();
 
     initial begin
         rst = 0;
+        clk = 0;
         #30 rst = 1;
         #30 rst = 0;
-        #200 $stop;
+        #2000 $stop;
     end
 
 endmodule
