@@ -2,7 +2,7 @@
 
 module Testbench();
     reg clk, rst;
-    ARM arm(.CLK_50(clk), .SW({17'b0, rst}));
+    CPU cpu(.clk(clk), .rst(rst));
 
     always #5 clk = ~clk;
 

@@ -302,27 +302,6 @@ input          TD_CLK27;            //	TV Decoder 27MHz CLK
 inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 	
-
-	wire[31:0] PCPlus4, PCD, PCEX, PCMEM, PCWB, PCF, instructionF, instructionD;
+	CPU cpu(.clk(CLOCK_50), .rst(SW[0]));
 	
-	IF_Stage instFetch(
-		.PCF(PCPlus4), .instructionF(instructionF), .clk(CLOCK_50), .rst(SW[0])
-	); //FIXME add signals
-
-	IF_Stage_Reg instFetchReg(.clk(CLOCK_50), .rst(SW[0]), .en(1'b1), .clr(1'b0), .instrF(instructionF), .instrD(instructionD), .PCF(PCPlus4), .PCD(PCD));
-
-	ID_Stage instDecode(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
-
-	ID_Stage_Reg instDecodeReg(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
-
-	EXE_Stage execute(.clk(CLOCK_50), .rst(SW[0]), .PCEX(PCEX), .PCMEM(PCMEM));
-
-	EXE_Stage_Reg executeReg(.clk(CLOCK_50), .rst(SW[0]), .PCEX(PCEX), .PCMEM(PCMEM));
-
-	MEM_Stage memory(.clk(CLOCK_50), .rst(SW[0]), .PCMEM(PCMEM), .PCWB(PCWB));
-
-	MEM_Stage_Reg memoryReg(.clk(CLOCK_50), .rst(SW[0]), .PCMEM(PCMEM), .PCWB(PCWB));
-
-	WB_Stage writeBack(.clk(CLOCK_50), .rst(SW[0]), .PCWB(PCWB), .PCF(PCF));
-
 endmodule
