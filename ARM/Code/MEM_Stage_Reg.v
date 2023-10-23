@@ -7,7 +7,7 @@ module MEM_Stage_Reg(clk, rst, PCMEM, PCWB);
 
     always@(posedge clk or posedge rst) begin
 
-    PCWB = (rst) ? 32'b0 : PCMEM;
+        PCWB = (rst) ? 32'b0 : PCMEM;
 
     end
 

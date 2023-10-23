@@ -7,7 +7,7 @@ module ID_Stage_Reg(clk, rst, PCD, PCEX);
 
     always@(posedge clk or posedge rst) begin
 
-    PCEX = (rst) ? 32'b0 : PCD;
+        PCEX = (rst) ? 32'b0 : PCD;
 
     end
 
