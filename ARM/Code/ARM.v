@@ -303,9 +303,26 @@ inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 	
 
-	wire[31:0] PCPlus4, instruction;
+	wire[31:0] PCPlus4, PCD, PCEX, PCMEM, PCWB, PCF, instruction;
 	
-	IF instructionetch(
+	IF_Stage instFetch(
 		.PCPlus4(PCPlus4), .instruction(instruction), .clk(CLOCK_50), .rst(SW[0])
-	) //FIXME add signals
+	); //FIXME add signals
+
+	IF_Stage_Reg instFetchReg(.clk(CLOCK_50), .rst(SW[0]), .PCF(PCPlus4), .PCD(PCD));
+
+	ID_stage instDecode(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
+
+	ID_Stage_Reg instDecodeReg(.clk(CLOCK_50), .rst(SW[0]), .PCD(PCD), .PCEX(PCEX));
+
+	EXE_Stage execute(.clk(CLOCK_50), .rst(SW[0]), .PCEX(PCEX), .PCMEM(PCMEM));
+
+	EXE_Stage_Reg executeReg(.clk(CLOCK_50), .rst(SW[0]), .PCEX(PCEX), .PCMEM(PCMEM));
+
+	MEM_Stage memory(.clk(CLOCK_50), .rst(SW[0]), .PCMEM(PCMEM), .PCWB(PCWB));
+
+	MEM_Stage_Reg memoryReg(.clk(CLOCK_50), .rst(SW[0]), .PCMEM(PCMEM), .PCWB(PCWB));
+
+	WB_Stage writeBack(.clk(CLOCK_50), .rst(SW[0]), .PCWB(PCWB), .PCF(PCF));
+
 endmodule
