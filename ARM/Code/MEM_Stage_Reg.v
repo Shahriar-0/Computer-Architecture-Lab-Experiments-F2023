@@ -1,9 +1,10 @@
 
 module MEM_Stage_Reg(clk, rst, PCMEM, PCWB);
 
+    parameter N = 32;
     input wire[0:0] clk, rst;
-    input wire[0:31] PCMEM;
-    output reg[0:31] PCWB;
+    input wire[N - 1:0] PCMEM;
+    output reg[N - 1:0] PCWB;
 
     always@(posedge clk or posedge rst) begin
 
