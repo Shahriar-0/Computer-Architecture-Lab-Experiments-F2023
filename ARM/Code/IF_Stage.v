@@ -1,13 +1,13 @@
 module IF_Stage(clk, rst, PCF, instructionF, freezeF, branchAdderF, branchTakenF);
     parameter N = 32;
 
-    input clk, rst, freeze, branchAdderF, branchTakenF;
+    input clk, rst, freezeF, branchAdderF, branchTakenF;
 
     output[N - 1:0] PCF, instructionF;
     
     wire[N - 1:0] PCRegIn, PCRegOut, PCPlus4F;
 
-    assign branchAdderF = branchTakenF = freezeF = 0;
+    // assign branchAdderF = branchTakenF = freezeF = 0;
 
     Adder adder(   
         // adder module for updating PC(programming counter) to go to 
