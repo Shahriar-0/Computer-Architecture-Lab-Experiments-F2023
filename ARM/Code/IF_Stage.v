@@ -1,4 +1,4 @@
-module InstructionFetch(clk, rst, PژF, instructionF, freeze);
+module IF_Stage(clk, rst, PژF, instructionF, freeze);
     parameter N = 32;
 
     input clk, rst, freeze;
