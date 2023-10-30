@@ -1,14 +1,15 @@
-module Instruction_Memory(pc, instruction);
+module Instruction_Memory(PC, instruction);
+    #parameter N = 32;
+
     parameter Count = 1024;
 
-    input [31:0] pc;
+    input [N - 1:0] PC;
 
-    output reg [31:0] instruction;
+    output reg [N - 1:0] instruction;
 
-    reg [7:0] instructionMemory [0:$pow(2, 16)-1]; 
 
-    wire [31:0] adr;
-    assign adr = {pc[31:2], 2'b00}; 
+    wire [N - 1:0] adr;
+    assign adr = {PC[N - 1:2], 2'b00}; 
 
     always @(adr) begin
     case (adr)
