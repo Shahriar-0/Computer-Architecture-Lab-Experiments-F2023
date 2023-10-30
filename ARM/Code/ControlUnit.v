@@ -1,20 +1,20 @@
-module ControlUnit(modeIn, opcodeIn, SIn, EXE_CMDOut, SOut, BOut, 
+module ControlUnit(modeIn, opCodeIn, SIn, EXE_CMDOut, SOut, BOut, 
                    MEM_W_ENOut, MEM_R_ENOut, WB_ENOut); 
 
     input [1:0] modeIn;
-    input [3:0] opcodeIn;
+    input [3:0] opCodeIn;
     input SIn;
 
     output reg [3:0] EXE_CMDOut;
     output reg MEM_R_ENOut, MEM_W_ENOut;
     output reg WB_ENOut, BOut, SOut;
 
-    always @(mode, opcode, sIn) begin
+    always @(mode, opCodeIn, sIn) begin
         EXE_CMDOut = 4'd0;
         {MEM_R_ENOut, MEM_W_ENOut} = 2'd0;
         {WB_ENOut, BOut, SOut} = 3'd0;
 
-        case (opcode)
+        case (opCodeIn)
             4'b1101: EXE_CMDOut = 4'b0001; // MOV
             4'b1111: EXE_CMDOut = 4'b1001; // MVN
             4'b0100: EXE_CMDOut = 4'b0010; // ADD, LDR, STR
@@ -31,14 +31,14 @@ module ControlUnit(modeIn, opcodeIn, SIn, EXE_CMDOut, SOut, BOut,
 
         case (mode)
             2'b00: begin
-                SOut = sIn;
+                SOut = SIn;
                 // no write-back for CMP and TST
-                WB_ENOut = (opcode == 4'b1010 || opcode == 4'b1000) ? 1'b0 : 1'b1;
+                WB_ENOut = (opCodeIn == 4'b1010 || opCodeIn == 4'b1000) ? 1'b0 : 1'b1;
             end
 
             2'b01: begin
-                WB_ENOut = sIn;
-                MEM_R_ENOut = sIn;
+                WB_ENOut = SIn;
+                MEM_R_ENOut = SIn;
                 MEM_W_ENOut = ~sIn;
             end
 
