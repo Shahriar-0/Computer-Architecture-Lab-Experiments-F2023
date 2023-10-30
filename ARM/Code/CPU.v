@@ -11,7 +11,7 @@ module CPU(clk, rst);
 
 	IF_Stage_Reg instFetchReg(.clk(clk), .rst(rst), .en(1'b1), .clr(1'b0), .instrIn(IF_IFR_Instruction), .instrOut(IFR_ID_Instruction), .PCIn(IF_IFR_PC), .PCOut(IFR_ID_PC));
 
-	ID_Stage instDecode(.clk(clk), .rst(rst), .PCIn(IFR_ID_Instruction), .PCOut(ID_IDR_PC));
+	ID_Stage instDecode(.clk(clk), .rst(rst), .PCIn(IFR_ID_PC), .PCOut(ID_IDR_PC));
 
 	ID_Stage_Reg instDecodeReg(.clk(clk), .rst(rst), .PCIn(ID_IDR_PC), .PCOut(IDR_EX_PC));
 
