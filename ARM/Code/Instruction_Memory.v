@@ -1,5 +1,5 @@
 module Instruction_Memory(PC, instruction);
-    #parameter N = 32;
+    parameter N = 32;
 
     parameter Count = 1024;
 
