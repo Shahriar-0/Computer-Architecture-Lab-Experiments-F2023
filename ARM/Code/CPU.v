@@ -6,18 +6,24 @@ module CPU(clk, rst);
 		// IF IFR ID
 		IF_IFR_PC, IFR_ID_PC, 
 		IF_IFR_Instruction, IFR_ID_Instruction,
-		// ID IDR EXE
+		// ID IDR EX
 		ID_IDR_PC, IDR_EX_PC, 
+		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD, 
+		ID_IDR_Val_Rn, IDR_EX_Val_Rn, 
+		ID_IDR_Val_Rm, IDR_EX_Val_Rm, 
+		// EX EXR MEM 
+		EX_EXR_PC, EXR_MEM_PC,
+		// MEM MEMR WB
+		MEM_MEMR_PC, MEMR_WB_PC, WB_WBR_PC
+		// general
+		StatusRegIn, StatusRegOut;
+
+	wire [0:0] 
 		ID_IDR_WB_EN, IDR_EX_WB_EN, 
 		ID_IDR_MEM_R_EN, IDR_EX_MEM_R_EN, 
 		ID_IDR_MEM_W_EN, IDR_EX_MEM_W_EN, 
-		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD, 
 		ID_IDR_B, IDR_EX_B, 
 		ID_IDR_S, IDR_EX_S, 
-		ID_IDR_Val_Rn, IDR_EX_Val_Rn, 
-		ID_IDR_Val_Rm, IDR_EX_Val_Rm, 
-		// EXE EXER MEM 
-		EX_EXR_PC, EXR_MEM_PC, MEM_MEMR_PC, MEMR_WB_PC, WB_WBR_PC;
 	
 	IF_Stage instFetch(
 		.IF_IFR_PC(IF_IFR_PC), .IF_IFR_Instruction(IF_IFR_Instruction),
