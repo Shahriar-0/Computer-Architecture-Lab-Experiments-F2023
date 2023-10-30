@@ -26,6 +26,10 @@ module IF_Stage(clk, rst, IF_IFR_PC, IF_IFR_Instruction, freeze, MEM_MEMR_branch
         .in(PCRegIn), .clk(clk), .en(~freeze), .rst(rst), .out(PCRegOut)
     ); 
 
+    Instruction_Memory instructionMemory(
+        .PC(PCRegOut), .instruction(IF_IFR_Instruction)
+    );
+
     assign IF_IFR_PC = PCPlus4F;
 
 endmodule
