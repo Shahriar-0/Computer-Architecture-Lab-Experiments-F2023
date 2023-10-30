@@ -1,11 +1,12 @@
-module ALU(Val1In, Val2In, EXE_CMDIn, statusIn, statusOut, ALU_ResOut);
+module ALU(Val1In, Val2In, EXE_CMDIn, statusCarryIn, statusOut, ALU_ResOut);
     parameter N = 32
 
-    input [N-1:0] Val1In, Val2In,
-    input statuCarryIn,
-    input [3:0] EXE_CMDIn,
-    output reg [N-1:0] ALU_ResOut,
-    output [3:0] statusOut
+    input [N-1:0] Val1In, Val2In;
+    input statuCarryIn;
+    input [3:0] EXE_CMDIn;
+    
+    output reg [N-1:0] ALU_ResOut;
+    output [3:0] statusOut;
 
     reg c, v;
     wire z, n;

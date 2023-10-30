@@ -6,6 +6,8 @@ module CPU(clk, rst);
 		// IF IFR ID
 		IF_IFR_PC, IFR_ID_PC, 
 		IF_IFR_Instruction, IFR_ID_Instruction,
+		IFR_ID_MEM_W
+		// TODO Complete these wires for instance
 		// ID IDR EX
 		ID_IDR_PC, IDR_EX_PC, 
 		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD, 
@@ -38,9 +40,16 @@ module CPU(clk, rst);
 	);
 
 	ID_Stage instDecode(
-		.clk(clk), .rst(rst), .PCIn(IFR_ID_PC), .PCOut(ID_IDR_PC),
-		.instructionIn(IFR_ID_Instruction)
+		.clk(clk), .rst(rst), 
+		.PCIn(IFR_ID_PC), .PCOut(ID_IDR_PC),
+		.instructionIn(IFR_ID_Instruction), 
+		.MEM_W_ENIn(IFR_ID_MEM_W),
+		.WB_ENIn(IFR_ID_WB_EN),
+		// TODO rest
 	);
+	clk, rst, instructionIn, MEM_W_ENIn, WB_ENIn, 
+                WB_DestIn, WB_ValueIn, HazardIn, PCIn, 
+                PCOut, val_RnOut, val_RmOut, Two_srcOut, RnOut, statusIn
 
 	ID_Stage_Reg instDecodeReg(
 		.clk(clk), .rst(rst), 
