@@ -1,4 +1,4 @@
-module Register(in, clk, en, rst, out);
+module RegisterNegEdge(in, clk, en, rst, out);
     parameter N = 32;
 
     input [N-1:0] in;
@@ -6,13 +6,11 @@ module Register(in, clk, en, rst, out);
 
     output reg [N-1:0] out;
     
-    always @(posedge clk or posedge rst) begin
-
+    always @(negedge clk or posedge rst) begin
         if (rst)
             out <= {N{1'b0}};
         else if (en)
-            out <= in;
-            
+            out <= in;    
     end
 
 endmodule
