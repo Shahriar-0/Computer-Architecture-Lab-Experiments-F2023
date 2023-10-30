@@ -1,9 +1,9 @@
 
-module EXE_Stage(clk, rst, PCEX, PCMEM);
+module EXE_Stage(clk, rst, PCIn, PCOut);
     parameter N = 32;
     input wire[0:0] clk, rst;
-    input wire[N - 1:0] PCEX;
-    output wire[N - 1:0] PCMEM;
+    input wire[N - 1:0] PCIn;
+    output wire[N - 1:0] PCOut;
 
-    assign PCMEM = PCEX;
+    assign PCOut = PCIn;
 endmodule

@@ -2,27 +2,27 @@ module CPU(clk, rst);
 
     input clk, rst;
 
-    wire[31:0] PCPlus4, PCD, PCEX, PCMEM, PCWB, PCEX_Reg, PCMEM_Reg, PCWB_Reg, PCF, instructionF, instructionD;
+    wire[31:0] IF_IFR_PC, IFR_ID_PC, ID_IDR_PC, IDR_EX_PC, EX_EXR_PC, EXR_MEM_PC, MEM_MEMR_PC, MEMR_WB_PC, WB_WBR_PC, IF_IFR_Instruction, IFR_ID_Instruction;
 	
 	IF_Stage instFetch(
-		.PCF(PCPlus4), .instructionF(instructionF), .clk(clk), .rst(rst),
-		.freezeF(1'b0), .branchAdderF(32'b0), .branchTakenF(1'b0)
-	); //FIXME add signals
+		.IF_IFR_PC(IF_IFR_PC), .IF_IFR_Instruction(IF_IFR_Instruction), .clk(clk), .rst(rst),
+		.freeze(1'b0), .MEM_MEMR_branchAdder(32'b0), .branchTakenMem(1'b0)
+	); 
 
-	IF_Stage_Reg instFetchReg(.clk(clk), .rst(rst), .en(1'b1), .clr(1'b0), .instrF(instructionF), .instrD(instructionD), .PCF(PCPlus4), .PCD(PCD));
+	IF_Stage_Reg instFetchReg(.clk(clk), .rst(rst), .en(1'b1), .clr(1'b0), .instrIn(IF_IFR_Instruction), .instrOut(IFR_ID_Instruction), .PCIn(IF_IFR_PC), .PCOut(IFR_ID_PC));
 
-	//ID_Stage instDecode(.clk(clk), .rst(rst), .PCD(PCD), .PCEX(PCEX));
+	ID_Stage instDecode(.clk(clk), .rst(rst), .PCIn(IFR_ID_Instruction), .PCOut(ID_IDR_PC));
 
-	ID_Stage_Reg instDecodeReg(.clk(clk), .rst(rst), .PCD(PCD), .PCEX(PCEX));
+	ID_Stage_Reg instDecodeReg(.clk(clk), .rst(rst), .PCIn(ID_IDR_PC), .PCOut(IDR_EX_PC));
 
-	//EXE_Stage execute(.clk(clk), .rst(rst), .PCEX(PCEX), .PCMEM(PCMEM));
+	EXE_Stage execute(.clk(clk), .rst(rst), .PCIn(IDR_EX_PC), .PCOut(EX_EXR_PC));
 
-	EXE_Stage_Reg executeReg(.clk(clk), .rst(rst), .PCEX(PCEX), .PCMEM(PCMEM));
+	EXE_Stage_Reg executeReg(.clk(clk), .rst(rst), .PCIn(EX_EXR_PC), .PCOut(EXR_MEM_PC));
 
-	//MEM_Stage memory(.clk(clk), .rst(rst), .PCMEM(PCMEM), .PCWB(PCWB));
+	MEM_Stage memory(.clk(clk), .rst(rst), .PCIn(EXR_MEM_PC), .PCOut(MEM_MEMR_PC));
 
-	MEM_Stage_Reg memoryReg(.clk(clk), .rst(rst), .PCMEM(PCMEM), .PCWB(PCWB));
+	MEM_Stage_Reg memoryReg(.clk(clk), .rst(rst), .PCIn(MEM_MEMR_PC), .PCOut(MEMR_WB_PC));
 
-	//WB_Stage writeBack(.clk(clk), .rst(rst), .PCWB(PCWB), .PCF(PCF));
+	WB_Stage writeBack(.clk(clk), .rst(rst));
 
 endmodule

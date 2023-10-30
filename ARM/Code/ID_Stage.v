@@ -1,10 +1,10 @@
 
-module ID_Stage(clk, rst, PCD, PCEX);
+module ID_Stage(clk, rst, PCIn, PCOut);
 
     parameter N = 32;
     input wire[0:0] clk, rst;
-    input wire[N - 1:0] PCD;
-    output wire[N - 1:0] PCEX;
+    input wire[N - 1:0] PCIn;
+    output wire[N - 1:0] PCOut;
 
-    assign PCEX = PCD;
+    assign PCOut = PCIn;
 endmodule

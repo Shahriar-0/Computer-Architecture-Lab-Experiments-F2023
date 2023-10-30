@@ -1,23 +1,25 @@
-module IF_Stage_Reg(clk, rst, en, clr, instrF, PCF, instrD, PCD);
+module IF_Stage_Reg(clk, rst, en, clr, instrIn, PCIn, instrOut, PCOut);
     
     input clk, rst, clr, en;
-    input [31:0] instrF, PCF;
+    input [31:0] instrIn, PCIn;
 
-    output reg [31:0] instrD, PCD;
+    output reg [31:0] instrOut, PCOut;
     
     always @(posedge clk or posedge rst) begin
         
         if (rst) begin
-            instrD   <= 32'b0;
-            PCD      <= 32'b0;
+            instrOut   <= 32'b0;
+            PCOut      <= 32'b0;
         end 
-		  else if (clr) begin
-				instrD   <= 32'b0;
-            PCD      <= 32'b0;
-		  end
+        
+        else if (clr) begin
+			instrOut   <= 32'b0;
+            PCOut      <= 32'b0;
+        end
+
         else if (en) begin
-            instrD   <= instrF;
-            PCD      <= PCF;
+            instrOut   <= instrIn;
+            PCOut      <= PCIn;
         end
         
     end

@@ -1,14 +1,14 @@
 
-module MEM_Stage_Reg(clk, rst, PCMEM, PCWB);
+module MEM_Stage_Reg(clk, rst, PCIn, PCOut);
 
     parameter N = 32;
     input wire[0:0] clk, rst;
-    input wire[N - 1:0] PCMEM;
-    output reg[N - 1:0] PCWB;
+    input wire[N - 1:0] PCIn;
+    output reg[N - 1:0] PCOut;
 
     always@(posedge clk or posedge rst) begin
 
-        PCWB = (rst) ? 32'b0 : PCMEM;
+        PCOut = (rst) ? 32'b0 : PCIn;
 
     end
 
