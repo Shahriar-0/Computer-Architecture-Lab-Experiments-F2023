@@ -1,35 +1,33 @@
-module IF_Stage(clk, rst, IF_IFR_PC, IF_IFR_Instruction, freeze, MEM_MEMR_branchAdder, branchTakenMem);
+module IF_Stage(clk, rst, freeze, branchTakenIn, PCOut, instructionOut, branchAddressIn);
     parameter N = 32;
 
-    input clk, rst, freeze, branchTakenMem;
+    input wire[0:0] clk, rst, freeze, branchTakenIn;
+    input wire[N-1:0] branchAddressIn;
+    output wire [N - 1:0] PCOut, instructionOut;
     
-    input[N-1:0] MEM_MEMR_branchAdder;
-
-    output[N - 1:0] IF_IFR_PC, IF_IFR_Instruction;
-    
-    wire[N - 1:0] PCRegIn, PCRegOut, PCPlus4F;
-
-    // assign MEM_MEMR_branchAdder = branchTakenMem = freeze = 0;
+    wire[N - 1:0] PCRegIn, PCRegOut, PCPlus4;
 
     Adder adder(   
         // adder module for updating PC(programming counter) to go to 
         // next instruction(4 bytes cause of 32 bit instructions)) 
-        .a(32'd4), .b(PCRegOut), .out(PCPlus4F)
+        .a(32'd4), .b(PCRegOut), .out(PCPlus4)
     );
 
-    Mux2to1 muxPC(   
+    Mux2to1 #(32) muxPC(   
         // selecting PC register input which is either PC+4 or branch address (for branching commands)
-        .a(PCPlus4F), .b(MEM_MEMR_branchAdder), .s(branchTakenMem), .out(PCRegIn)
+        .a(PCPlus4), .b(branchAddressIn), .s(branchTakenIn), .out(PCRegIn)
     ); 
 
     Register PC(    
+        // PC register that specifies what instruction to read
         .in(PCRegIn), .clk(clk), .en(~freeze), .rst(rst), .out(PCRegOut)
     ); 
 
     Instruction_Memory instructionMemory(
-        .PC(PCRegOut), .instruction(IF_IFR_Instruction)
+        // Intsructions are stored in this memory
+        .PC(PCRegOut), .instruction(instructionOut)
     );
 
-    assign IF_IFR_PC = PCPlus4F;
+    assign PCOut = PCPlus4;
 
 endmodule

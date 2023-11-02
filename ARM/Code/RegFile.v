@@ -14,10 +14,7 @@ module RegisterFile(clk, regWrite,
     
     output [WordLen-1:0] readData1, readData2;
 
-    reg [WordLen-1:0] registerFile [0:WordCount-1];
-
-    initial 
-        registerFile[0] = 32'd0;
+    reg [WordLen-1:0] registerFile [0:WordCount-2];
 
     always @(negedge clk) begin
         if (regWrite)

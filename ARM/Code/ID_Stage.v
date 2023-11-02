@@ -1,14 +1,15 @@
 
-module ID_Stage(clk, rst, instructionIn, MEM_W_ENIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardIn, PCIn, statusIn,
-                PCOut, val_RnOut, val_RmOut, Two_srcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
+module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardIn, PCIn, statusIn,
+                PCOut, Val_RnOut, Val_RmOut, Two_srcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
                 DestOut, iOut, RnOut, regFileInp2Out, shiftOperandOut, immOut);
 
     parameter N = 32;
-    input wire[0:0] clk, rst, MEM_W_ENIn, WB_ENIn;
-    input wire[3:0] WB_DestIn;
+    
+    input wire[0:0] clk, rst, WB_ENIn;
+    input wire[3:0] WB_DestIn, statusIn;
     input wire[N - 1:0] PCIn, instrIn, WB_ValueIn;
-    output wire[N - 1:0] PCOut, val_RnOut, val_RmOut;
-    output wire[0:0] Two_srcOut, statusIn, SOut, BOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut, iOut;
+    output wire[N - 1:0] PCOut, Val_RnOut, Val_RmOut;
+    output wire[0:0] Two_srcOut, SOut, BOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut, iOut;
     output wire[3:0] EXE_CMDOut, DestOut, RnOut, regFileInp2Out;
     output wire[11:0] shiftOperandOut;
     output wire[23:0] immOut;
@@ -43,38 +44,56 @@ module ID_Stage(clk, rst, instructionIn, MEM_W_ENIn, WB_ENIn, WB_DestIn, WB_Valu
     assign i = instructionIn[25];
     assign iOut = i;
 
-    wire[3:0] readReg2;
-    assign regInp2 = (~MEM_W_ENIn) ? rm : rd;
-    assign regFileInp2Out = regInp2;
-
-    RegisterFile registerFile(.clk(clk), .regWrite(WB_ENIn),
-                    .readRegister1(rn), .readRegister2(regInp2),
-                    .writeRegister(WB_DestIn), .writeData(WB_ValueIn),
-                    .readData1(val_RnOut), .readData2(val_RmOut));
-
-    
-    assign Two_srcOut = ~i | MEM_W_ENIn;
-
-    wire[0:0] conditionCheckOut;
-    ConditionCheck conditionCheck(.condIn(cond), .condOut(conditionCheckOut), .statusIn(statusIn));
-
-    wire[0:0] conditionCheckOutOrHazard;
-    assign conditionCheckOutOrHazard = conditionCheckOut | HazardIn;
 
     wire[8:0] controlUnitOut
-    ControlUnit controlUnit(.opCodeIn(opCode), SIn(s), .modeIn(mode), 
-                            .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), .BOut(controlUnitOut[5]), 
-                            .MEM_W_ENOut(controlUnitOut[6]), .MEM_R_ENOut(controlUnitOut[7]), .WB_ENOut(controlUnitOut[8]));
+    ControlUnit controlUnit(
+        // Control Unit module for decode instructions and set control signals
+        .opCodeIn(opCode), SIn(s), .modeIn(mode), 
+        .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), .BOut(controlUnitOut[5]), 
+        .MEM_W_ENOut(controlUnitOut[6]), .MEM_R_ENOut(controlUnitOut[7]), .WB_ENOut(controlUnitOut[8])
+    );
 
-    wire[8:0] muxOut;
-    assign muxOut = (~conditionCheckOutOrHazard) ? controlUnit : 9'b0;
+    wire[0:0] conditionCheckOut;
+    ConditionCheck conditionCheck(
+        // This module check the condition that specified in the instruction
+        // if the condition is false, the instruction converts to NOP    
+        .condIn(cond), .condOut(conditionCheckOut), .statusIn(statusIn)
+    );
 
-    assign EXE_CMDOut = muxOut[3:0];
-    assign SOut = muxOut[4];
-    assign BOut = muxOut[5];
-    assign MEM_W_ENOut = muxOut[6];
-    assign MEM_R_ENOut = muxOut[7];
-    assign WB_ENOut = muxOut[8];
+    wire[0:0] controlSignalsSelector;
+    assign controlSignalsSelector = (~conditionCheckOut) | HazardIn;
+
+    wire[8:0] signals;
+    Mux2to1 #(9) controlSignalsMux(
+        // select between control signals that are produced in Control Unit module and 9'b0(do nothing)
+        .a(controlUnitOut), .b(9'b0), .s(controlSignalsSelector), .out(signals)
+    );
+
+    assign EXE_CMDOut = signals[3:0];
+    assign SOut = signals[4];
+    assign BOut = signals[5];
+    assign MEM_W_ENOut = signals[6];
+    assign MEM_R_ENOut = signals[7];
+    assign WB_ENOut = signals[8];
+
+
+    wire[3:0] readReg2;
+    Mux2to1 #(4) regInp2Mux(
+        // select rd as a source just when the instruction is STR
+        .a(rm), .b(rd), .s(signals[6]), .out(readReg2)        
+    );
+    assign regFileInp2Out = regInp2;
+
+    RegisterFile registerFile(
+        // Register file :)
+        .clk(clk), .regWrite(WB_ENIn),
+        .readRegister1(rn), .readRegister2(regInp2),
+        .writeRegister(WB_DestIn), .writeData(WB_ValueIn),
+        .readData1(Val_RnOut), .readData2(Val_RmOut)
+    );
+
+    assign Two_srcOut = ~i | signals[6];
 
     assign PCOut = PCIn;
+
 endmodule

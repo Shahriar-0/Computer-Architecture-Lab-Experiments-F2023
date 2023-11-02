@@ -28,9 +28,9 @@ module CPU(clk, rst);
 		ID_IDR_S, IDR_EX_S, 
 	
 	IF_Stage instFetch(
-		.IF_IFR_PC(IF_IFR_PC), .IF_IFR_Instruction(IF_IFR_Instruction),
+		.PCOut(IF_IFR_PC), .instructionOut(IF_IFR_Instruction),
 		.freeze(1'b0),  .clk(clk), .rst(rst),
-		.MEM_MEMR_branchAdder(32'b0), .branchTakenMem(1'b0)
+		.branchAddressIn(32'b0), .branchTakenIn(1'b0)
 	); 
 
 	IF_Stage_Reg instFetchReg(
@@ -47,9 +47,6 @@ module CPU(clk, rst);
 		.WB_ENIn(IFR_ID_WB_EN),
 		// TODO rest
 	);
-	clk, rst, instructionIn, MEM_W_ENIn, WB_ENIn, 
-                WB_DestIn, WB_ValueIn, HazardIn, PCIn, 
-                PCOut, val_RnOut, val_RmOut, Two_srcOut, RnOut, statusIn
 
 	ID_Stage_Reg instDecodeReg(
 		.clk(clk), .rst(rst), 
