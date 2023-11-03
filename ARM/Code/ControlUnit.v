@@ -9,7 +9,7 @@ module ControlUnit(modeIn, opCodeIn, SIn, EXE_CMDOut, SOut, BOut,
     output reg MEM_R_ENOut, MEM_W_ENOut;
     output reg WB_ENOut, BOut, SOut;
 
-    always @(mode, opCodeIn, sIn) begin
+    always @(modeIn, opCodeIn, SIn) begin
         EXE_CMDOut = 4'd0;
         {MEM_R_ENOut, MEM_W_ENOut} = 2'd0;
         {WB_ENOut, BOut, SOut} = 3'd0;
@@ -29,7 +29,7 @@ module ControlUnit(modeIn, opCodeIn, SIn, EXE_CMDOut, SOut, BOut,
             default: EXE_CMDOut = 4'b0001;
         endcase
 
-        case (mode)
+        case (modeIn)
             2'b00: begin
                 SOut = SIn;
                 // no write-back for CMP and TST
@@ -39,7 +39,7 @@ module ControlUnit(modeIn, opCodeIn, SIn, EXE_CMDOut, SOut, BOut,
             2'b01: begin
                 WB_ENOut = SIn;
                 MEM_R_ENOut = SIn;
-                MEM_W_ENOut = ~sIn;
+                MEM_W_ENOut = ~SIn;
             end
 
             2'b10: 

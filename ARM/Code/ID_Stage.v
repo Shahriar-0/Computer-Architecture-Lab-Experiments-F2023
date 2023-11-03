@@ -1,18 +1,18 @@
 
 module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardIn, PCIn, statusIn,
                 PCOut, Val_RnOut, Val_RmOut, Two_srcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
-                DestOut, iOut, RnOut, regFileInp2Out, shiftOperandOut, immOut);
+                DestOut, IOut, regFileInp2Out, shiftOperandOut, Imm24Out);
 
     parameter N = 32;
     
-    input wire[0:0] clk, rst, WB_ENIn;
+    input wire[0:0] clk, rst, WB_ENIn, HazardIn;
     input wire[3:0] WB_DestIn, statusIn;
-    input wire[N - 1:0] PCIn, instrIn, WB_ValueIn;
+    input wire[N - 1:0] PCIn, instructionIn, WB_ValueIn;
     output wire[N - 1:0] PCOut, Val_RnOut, Val_RmOut;
-    output wire[0:0] Two_srcOut, SOut, BOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut, iOut;
-    output wire[3:0] EXE_CMDOut, DestOut, RnOut, regFileInp2Out;
+    output wire[0:0] Two_srcOut, SOut, BOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut, IOut;
+    output wire[3:0] EXE_CMDOut, DestOut, regFileInp2Out;
     output wire[11:0] shiftOperandOut;
-    output wire[23:0] immOut;
+    output wire[23:0] Imm24Out;
 
     wire[1:0] mode;
     assign mode = instructionIn[27:26];
@@ -25,7 +25,6 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardI
 
     wire[3:0] rn;
     assign rn = instructionIn[19:16];
-    assign RnOut = rn;
 
     wire[3:0] rd;
     assign rd = instructionIn[15:12];
@@ -38,17 +37,17 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardI
     assign cond = instructionIn[31:28];
 
     assign shiftOperandOut = instructionIn[11:0];
-    assign immOut = instructionIn[23:0];
+    assign Imm24Out = instructionIn[23:0];
 
     wire[0:0] i;
     assign i = instructionIn[25];
-    assign iOut = i;
+    assign IOut = i;
 
 
-    wire[8:0] controlUnitOut
+    wire[8:0] controlUnitOut;
     ControlUnit controlUnit(
         // Control Unit module for decode instructions and set control signals
-        .opCodeIn(opCode), SIn(s), .modeIn(mode), 
+        .opCodeIn(opCode), .SIn(s), .modeIn(mode), 
         .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), .BOut(controlUnitOut[5]), 
         .MEM_W_ENOut(controlUnitOut[6]), .MEM_R_ENOut(controlUnitOut[7]), .WB_ENOut(controlUnitOut[8])
     );
@@ -77,10 +76,10 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardI
     assign WB_ENOut = signals[8];
 
 
-    wire[3:0] readReg2;
+    wire[3:0] regInp2;
     Mux2to1 #(4) regInp2Mux(
         // select rd as a source just when the instruction is STR
-        .a(rm), .b(rd), .s(signals[6]), .out(readReg2)        
+        .a(rm), .b(rd), .s(signals[6]), .out(regInp2)        
     );
     assign regFileInp2Out = regInp2;
 
