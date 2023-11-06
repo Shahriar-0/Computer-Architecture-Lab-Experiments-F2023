@@ -1,5 +1,5 @@
 
-module EXE_Stage(clk, rst, PCIn, PCOut, /*Val1In, Val2In, 
+module EXE_Stage(clk, rst, PCIn, PCOut/*, Val1In, Val2In, 
                  statuCarryIn, SIn, EXE_CMDIn, ALU_ResOut, StatusRegOut*/);
     parameter N = 32;
     

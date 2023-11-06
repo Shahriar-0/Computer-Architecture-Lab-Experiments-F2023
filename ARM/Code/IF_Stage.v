@@ -18,7 +18,7 @@ module IF_Stage(clk, rst, freeze, branchTakenIn, PCOut, instructionOut, branchAd
         .a(PCPlus4), .b(branchAddressIn), .s(branchTakenIn), .out(PCRegIn)
     ); 
 
-    Register PC(    
+    RegisterPosEdge PC(    
         // PC register that specifies what instruction to read
         .in(PCRegIn), .clk(clk), .en(~freeze), .rst(rst), .out(PCRegOut)
     ); 

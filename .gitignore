@@ -8,4 +8,5 @@ output_files/
 *.mti
 *.mpf
 *.wlf
+*.stp
 work/

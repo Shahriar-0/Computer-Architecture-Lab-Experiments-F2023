@@ -1,5 +1,3 @@
-`define BITS(x) $rtoi($ceil($clog2(x)))
-
 module RegisterFile(clk, rst, regWrite,
                     readRegister1, readRegister2,
                     writeRegister, writeData,
@@ -9,7 +7,7 @@ module RegisterFile(clk, rst, regWrite,
     parameter WordCount = 16;
 
     input regWrite, clk, rst;
-    input [`BITS(WordCount)-1:0] readRegister1, readRegister2, writeRegister;
+    input [3:0] readRegister1, readRegister2, writeRegister;
     input [WordLen-1:0] writeData;
     
     output [WordLen-1:0] readData1, readData2;

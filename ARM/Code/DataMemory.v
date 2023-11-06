@@ -1,11 +1,11 @@
 module DataMemory(clk, rst, ALU_ResIn, Value_RmIn, MEM_W_ENIn, MEM_R_ENIn, resultOut);
     input clk, rst;
     input [31:0] Value_RmIn, ALU_ResIn;
-    input MEM_E_ENIn, MEM_W_ENIn;
+    input MEM_R_ENIn, MEM_W_ENIn;
 
     output reg [31:0] resultOut;
 
-    param WordCount = 64;
+    localparam WordCount = 64;
 
     reg [31:0] dataMem [0:WordCount - 1]; // 256B memory
 
@@ -24,8 +24,8 @@ module DataMemory(clk, rst, ALU_ResIn, Value_RmIn, MEM_W_ENIn, MEM_R_ENIn, resul
             dataMem[adr] <= ALU_ResIn;
     end
 
-    always @(MEM_E_ENIn or adr) begin
-        if (MEM_E_ENIn)
+    always @(MEM_R_ENIn or adr) begin
+        if (MEM_R_ENIn)
             resultOut = dataMem[adr];
     end
 endmodule
