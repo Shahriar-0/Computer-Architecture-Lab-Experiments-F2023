@@ -1,6 +1,5 @@
 
-module EXE_Stage(clk, rst, PCIn, PCOut/*, Val1In, Val2In, 
-                 statuCarryIn, SIn, EXE_CMDIn, ALU_ResOut, StatusRegOut*/);
+module EXE_Stage(clk, rst, WB_NIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn, PCIn, Val_RnI, Val_RmIn, );
     parameter N = 32;
     
     input wire[0:0] clk, rst;
