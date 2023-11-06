@@ -8,7 +8,7 @@ module RegisterFile(clk, rst, regWrite,
     parameter WordLen = 32;
     parameter WordCount = 16;
 
-    input regWrite, clk;
+    input regWrite, clk, rst;
     input [`BITS(WordCount)-1:0] readRegister1, readRegister2, writeRegister;
     input [WordLen-1:0] writeData;
     
@@ -21,7 +21,7 @@ module RegisterFile(clk, rst, regWrite,
     always @(negedge clk) begin
         if (rst)
             for (i = 0; i < WordCount; i = i + 1)
-                regFile[i] <= 0;
+                registerFile[i] <= 0;
         if (regWrite & (|writeRegister))
             registerFile[writeRegister] <= writeData;
     end

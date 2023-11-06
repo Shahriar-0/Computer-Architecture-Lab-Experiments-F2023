@@ -61,7 +61,7 @@ module CPU(clk, rst);
 		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(/*WB_ID_WB_EN*/1'b0),                 
 		.WB_DestIn(WB_ID_WB_Dest),             .WB_ValueIn(WB_ID_WB_Value),           
 		.HazardIn(/*HZ_ID_Hazard*/ 1'b0),      .PCIn(IFR_ID_PC),                      
-		.statusIn(STAT_ID),                    .PCOut(ID_IDR_PC),                     
+		.statusIn(/*STAT_ID*/4'b0),                    .PCOut(ID_IDR_PC),                     
 		.Val_RnOut(ID_IDR_Val_Rn),             .Val_RmOut(ID_IDR_Val_Rm),             
 		.Two_srcOut(ID_HZ_Two_Src),            .SOut(ID_IDR_S),               
 		.BOut(ID_IDR_B),                       .EXE_CMDOut(ID_IDR_EXE_CMD), 
