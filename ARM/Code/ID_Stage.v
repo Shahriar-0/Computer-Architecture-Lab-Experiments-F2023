@@ -85,7 +85,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardI
 
     RegisterFile registerFile(
         // Register file :)
-        .clk(clk), .regWrite(WB_ENIn),
+        .clk(clk), .rst(rst), .regWrite(WB_ENIn),
         .readRegister1(rn), .readRegister2(regInp2),
         .writeRegister(WB_DestIn), .writeData(WB_ValueIn),
         .readData1(Val_RnOut), .readData2(Val_RmOut)
