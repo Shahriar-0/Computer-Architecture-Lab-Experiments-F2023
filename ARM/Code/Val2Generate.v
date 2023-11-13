@@ -1,14 +1,14 @@
 module Val2Generate(valRmIn, shiftOperandIn, IIn, STypeSignal, valOut);
 
     input wire[0:0] IIn, STypeSignal;
-    input wire[11;0] shiftOperandIn;
+    input wire[11:0] shiftOperandIn;
     input wire[31:0] valRmIn;
 
     output reg[31:0] valOut;
 
     wire[4:0] shift_imm = shiftOperandIn[11:7];
     wire[1:0] shift = shiftOperandIn[6:5];
-    
+
     wire[7:0] immed_8 = shiftOperandIn[7:0];
     wire[3:0] rotate_imm = shiftOperandIn[11:8];
 
