@@ -38,7 +38,7 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
             DestOut         <= 4'b0;
             statusOut       <= 4'b0;
             shiftOperandOut <= 12'b0;
-            Imm24Out          <= 24'b0;
+            Imm24Out        <= 24'b0;
             PCOut           <= 32'b0;
             Val_RmOut       <= 32'b0;
             Val_RnOut       <= 32'b0;
@@ -55,7 +55,7 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
             DestOut         <= 4'b0;
             statusOut       <= 4'b0;
             shiftOperandOut <= 12'b0;
-            Imm24Out          <= 24'b0;
+            Imm24Out        <= 24'b0;
             PCOut           <= 32'b0;
             Val_RmOut       <= 32'b0;
             Val_RnOut       <= 32'b0;
@@ -72,7 +72,7 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
             DestOut         <= DestIn;
             statusOut       <= statusIn;
             shiftOperandOut <= shiftOperandIn;
-            Imm24Out          <= Imm24In;
+            Imm24Out        <= Imm24In;
             PCOut           <= PCIn;
             Val_RmOut       <= Val_RmIn;
             Val_RnOut       <= Val_RnIn;
