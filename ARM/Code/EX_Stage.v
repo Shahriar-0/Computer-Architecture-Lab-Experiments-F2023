@@ -1,7 +1,9 @@
 
-module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn, PCIn, Val_RnIn, 
-                    Val_RmIn, shiftOperandIn, IIn, Imm24In, DestIn, statusIn,
-                    WB_ENOut, MEM_R_ENOut, MEM_W_ENOut, ALU_ResOut, Val_RmOut, DestOut, statusOut, branchAddressOut, SOut);
+module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, 
+                 BIn, SIn, PCIn, Val_RnIn, Val_RmIn, shiftOperandIn, 
+                 IIn, Imm24In, DestIn, statusIn, WB_ENOut, MEM_R_ENOut, 
+                 MEM_W_ENOut, ALU_ResOut, Val_RmOut, DestOut, statusOut, 
+                 branchAddressOut, SOut);
     
     input wire[0:0] clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, BIn, SIn, IIn;
     input wire[3:0] EXE_CMDIn, DestIn, statusIn;
@@ -11,7 +13,7 @@ module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn,
 
     output wire[0:0] WB_ENOut, MEM_R_ENOut, MEM_W_ENOut, SOut;
     output wire[3:0] DestOut, statusOut;
-    output wire[31:0] PCOut, ALU_ResOut, Val_RmOut, branchAddressOut;
+    output wire[31:0] ALU_ResOut, Val_RmOut, branchAddressOut;
 
 
     wire[0:0] STypeSignal = MEM_R_ENIn | MEM_W_ENIn;

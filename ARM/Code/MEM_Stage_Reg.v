@@ -1,18 +1,18 @@
 
-module MEM_Stage_Reg(clk, rst, WB_ENIn, WB_ENOut, MEM_R_ENIn, 
+module MEM_Stage_Reg(clk, rst, clr, en, WB_ENIn, WB_ENOut, MEM_R_ENIn, 
                     MEM_R_ENOut, ALU_ResIn, ALU_ResOut, DataMemoryIn, 
                     DataMemoryOut, DestIn, DestOut);
 
     parameter N = 32;
-    input wire[0:0] clk, rst;
+    input wire[0:0] clk, rst, clr, en;
 
     input wire[0:0] WB_ENIn, MEM_R_ENIn;
     input wire[3:0] DestIn;
     input wire[N - 1:0] ALU_ResIn, DataMemoryIn;
     
-    output wire[0:0] WB_ENOut, MEM_R_ENOut;
-    output wire[3:0] DestOut;
-    output wire[N - 1:0] ALU_ResOut, DataMemoryOut;
+    output reg[0:0] WB_ENOut, MEM_R_ENOut;
+    output reg[3:0] DestOut;
+    output reg[N - 1:0] ALU_ResOut, DataMemoryOut;
 
 
     always@(posedge clk or posedge rst) begin

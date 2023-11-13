@@ -12,6 +12,8 @@ module Val2Generate(valRmIn, shiftOperandIn, IIn, STypeSignal, valOut);
     wire[7:0] immed_8 = shiftOperandIn[7:0];
     wire[3:0] rotate_imm = shiftOperandIn[11:8];
 
+    integer i;
+
     always @(valRmIn, shiftOperandIn, IIn, STypeSignal) begin
 
         valOut = 32'b0;
@@ -19,10 +21,10 @@ module Val2Generate(valRmIn, shiftOperandIn, IIn, STypeSignal, valOut);
             valOut = {{20{shiftOperandIn[11]}}, shiftOperandIn};
         end
 
-        else if (IIm) begin // 32-bit immediate
+        else if (IIn) begin // 32-bit immediate
 
             valOut = {24'b0, immed_8};
-            for (integer i = 0; i < 2 * rotate_imm; i = i + 1) begin
+            for (i = 0; i < 2 * rotate_imm; i = i + 1) begin
                 valOut = {valOut[0], valOut[31:1]};
             end
 
