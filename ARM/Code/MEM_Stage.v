@@ -1,5 +1,7 @@
 
-module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, WB_ENIn, Value_RmIn, DestIn, WB_ENOut, MEM_R_ENOut, ALU_ResOut, DataMemoryOut, DestOut);
+module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, WB_ENIn, 
+                 Value_RmIn, DestIn, WB_ENOut, MEM_R_ENOut, ALU_ResOut, 
+                 DataMemoryOut, DestOut);
 
     parameter N = 32;
     input wire[0:0] clk, rst;
