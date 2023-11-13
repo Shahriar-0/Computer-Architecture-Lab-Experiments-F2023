@@ -1,4 +1,5 @@
-module DataMemory(clk, rst, ALU_ResIn, Value_RmIn, MEM_W_ENIn, MEM_R_ENIn, resultOut);
+module DataMemory(clk, rst, ALU_ResIn, Value_RmIn, 
+                  MEM_W_ENIn, MEM_R_ENIn, resultOut);
     input clk, rst;
     input [31:0] Value_RmIn, ALU_ResIn;
     input MEM_R_ENIn, MEM_W_ENIn;

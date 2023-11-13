@@ -1,10 +1,20 @@
 
-module MEM_Stage(clk, rst, PCIn, PCOut);
+module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, WB_EnIn, Value_RmIn, DestIn, WB_EnOut, MEM_R_ENOut, ALU_ResOut, DataMemoryOut, DestOut);
 
     parameter N = 32;
     input wire[0:0] clk, rst;
-    input wire[N - 1:0] PCIn;
-    output wire[N - 1:0] PCOut;
+    
+    input wire[0:0] MEM_R_ENIn, MEM_W_ENIn, WB_EnIn;
+    input wire[3:0] DestIn;
+    input wire[N - 1:0] ALU_ResIn, Value_RmIn;
 
-    assign PCOut = PCIn;
+
+    output wire[0:0] MEM_R_ENOut, MEM_W_ENOut, WB_EnOut;
+    input wire[3:0] DestOut;
+    input wire[N - 1:0] DataMemoryOut;
+
+
+    DataMemory DM(.clk(clk), .rst(rst), .ALU_ResIn(ALU_ResIn), .Value_RmIn(Val_RmIn), .MEM_W_ENIn(MEM_W_ENIn), .MEM_R_ENIn(MEM_R_ENIn), .resultOut(DataMemoryOut));
+    
+
 endmodule
