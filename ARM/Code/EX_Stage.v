@@ -29,7 +29,7 @@ module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn,
         .statusOut(statusOut), .ALU_ResOut(ALU_ResOut)
     );
 
-    Adder branchAddressAdder(.a(PCIn), .b({{6{signedImm24[23]}}, signedImm24, 2'b00}), .out(branchAddressOut));
+    Adder branchAddressAdder(.a(PCIn), .b({{6{Imm24In[23]}}, Imm24In, 2'b00}), .out(branchAddressOut));
 
     assign WB_ENOut    = WB_ENIn;
     assign MEM_R_ENOut = MEM_R_ENIn;
