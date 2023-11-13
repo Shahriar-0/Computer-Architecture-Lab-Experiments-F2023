@@ -1,24 +1,33 @@
 
-module EXE_Stage(clk, rst, WB_NIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn, PCIn, Val_RnI, Val_RmIn, );
-    parameter N = 32;
+module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn, PCIn, Val_RnIn, 
+                    Val_RmIn, shiftOperandIn, IIn, Imm24In, DestIn, statusIn,
+                    WB_ENOut, MEM_R_ENOut, MEM_W_ENOut, ALU_ResOut, Val_RmOut, DestOut, statusOut, branchAddressOut, SOut);
     
-    input wire[0:0] clk, rst;
-    input wire[N - 1:0] PCIn/*, Val1In, Val2In, EXE_CMDIn*/;
+    input wire[0:0] clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, BIn, SIn, IIn;
+    input wire[3:0] EXE_CMDIn, DestIn, statusIn;
+    input wire[11:0] shiftOperandIn;
+    input wire[23:0] Imm24In;
+    input wire[31:0] PCIn, Val_RnIn, Val_RmIn;
 
-    output wire[N - 1:0] PCOut/*, ALU_ResOut*/;
+    output wire[0:0] WB_ENOut, MEM_R_ENOut, MEM_W_ENOut, SOut;
+    output wire[3:0] DestOut, statusOut;
+    output wire[31:0] PCOut, ALU_ResOut, Val_RmOut, branchAddressOut;
 
-    // wire [N - 1: 0]
-    //     statusRegIn;
+
+    wire[0:0] STypeSignal = MEM_R_ENIn | MEM_W_ENIn;
+    wire[31:0] val2;
+    Val2Generate val2Generator(
+        .valRmIn(Val_RmIn), .shiftOperandIn(shiftOperandIn), 
+        .IIn(IIn),          .STypeSignal(STypeSignal), 
+        .valOut(val2)
+    );
 
 
-    // ALU #(32) alu(
-    //     .Val1In(Val1In),
-    //     .Val2In(Val2In),
-    //     .statuCarryIn(statuCarryIn),
-    //     .EXE_CMDIn(EXE_CMDIn),
-    //     .ALU_ResOut(ALU_ResOut),
-    //     .statusIn(statusRegIn)
-    // );
+    ALU alu(
+        .Val1In(Val_RnIn), .Val2In(val2), 
+        .EXE_CMDIn(EXE_CMDIn), .statusCarryIn(statusIn[1]), 
+        .statusOut(statusOut), .ALU_ResOut(ALU_ResOut)
+    );
 
     // RegisterNegEdge #(4) statusReg(
     //     .clk(clk),
