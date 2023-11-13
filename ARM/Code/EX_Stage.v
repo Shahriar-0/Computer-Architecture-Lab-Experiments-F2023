@@ -24,18 +24,18 @@ module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, BIn, SIn,
 
 
     ALU alu(
-        .Val1In(Val_RnIn), .Val2In(val2), 
+        .Val1In(Val_RnIn),     .Val2In(val2), 
         .EXE_CMDIn(EXE_CMDIn), .statusCarryIn(statusIn[1]), 
         .statusOut(statusOut), .ALU_ResOut(ALU_ResOut)
     );
 
-    // RegisterNegEdge #(4) statusReg(
-    //     .clk(clk),
-    //     .rst(rst),
-    //     .en(SIn),
-    //     .in(statusIn),
-    //     .out(StatusRegOut)
-    // );
+    Adder branchAddressAdder(.a(PCIn), .b({{6{signedImm24[23]}}, signedImm24, 2'b00}), .out(branchAddressOut));
 
-    assign PCOut = PCIn;
+    assign WB_ENOut    = WB_ENIn;
+    assign MEM_R_ENOut = MEM_R_ENIn;
+    assign MEM_W_ENOut = MEM_W_ENIn;
+    assign Val_RmOut   = Val_RmIn;
+    assign DestOut     = DestIn;
+    assign SOut        = SIn;
+
 endmodule
