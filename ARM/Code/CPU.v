@@ -102,7 +102,7 @@ module CPU(clk, rst);
 		.Val_RnIn(IDR_EX_Val_Rn),                .Val_RmIn(IDR_EX_Val_Rm), 
 		.shiftOperandIn(IDR_EX_ShiftOperand),    .IIn(IDR_EX_I), 
 		.Imm24In(IDR_EX_Imm24),                  .DestIn(IDR_EX_Dest), 
-		.statusIn(STAT_Out),                      .WB_ENOut(EX_EXR_WB_EN), 
+		.statusIn(STAT_Out),                     .WB_ENOut(EX_EXR_WB_EN), 
 		.MEM_R_ENOut(EX_EXR_MEM_R_EN),           .MEM_W_ENOut(EX_EXR_MEM_W_EN), 
 		.ALU_ResOut(EX_EXR_ALU),                 .Val_RmOut(EX_EXR_Val_Rm), 
 		.DestOut(EX_EXR_Dest),                   .statusOut(EX_STAT), 
@@ -124,16 +124,16 @@ module CPU(clk, rst);
 	);
 
 
-	MEM_Stage memory(
-		.clk(clk), .rst(rst), .PCIn(EXR_MEM_PC), .PCOut(MEM_MEMR_PC)
-	);
+	// MEM_Stage memory(
+	// 	.clk(clk), .rst(rst), .PCIn(EXR_MEM_PC), .PCOut(MEM_MEMR_PC)
+	// );
 
-	MEM_Stage_Reg memoryReg(
-		.clk(clk), .rst(rst), .PCIn(MEM_MEMR_PC), .PCOut(MEMR_WB_PC)
-	);
+	// MEM_Stage_Reg memoryReg(
+	// 	.clk(clk), .rst(rst), .PCIn(MEM_MEMR_PC), .PCOut(MEMR_WB_PC)
+	// );
 
-	WB_Stage writeBack(
-		.clk(clk), .rst(rst)
-	);
+	// WB_Stage writeBack(
+	// 	.clk(clk), .rst(rst)
+	// );
 
 endmodule

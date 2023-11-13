@@ -16,10 +16,11 @@ module RegisterFile(clk, rst, regWrite,
 
     integer i;
 
+
     always @(negedge clk) begin
         if (rst)
             for (i = 0; i < WordCount; i = i + 1)
-                registerFile[i] <= 0;
+                registerFile[i] <= i;
         if (regWrite & (|writeRegister))
             registerFile[writeRegister] <= writeData;
     end
