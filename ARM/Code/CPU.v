@@ -13,9 +13,9 @@ module CPU(clk, rst);
 		ID_IDR_Val_Rn, IDR_EX_Val_Rn, 
 		ID_IDR_Val_Rm, IDR_EX_Val_Rm, 
 		// EX EXR MEM 
-		EX_EXR_ALU, EX_EXR_Val_Rm, EXR_MEM_ALU, EXR_MEM_Val_Rm,
+		EX_EXR_ALU, EX_EXR_Val_Rm, EXR_MEM_ALU, EXR_MEM_Val_Rm, MEM_MEMR_ALU,
 		// MEM MEMR WB
-		MEM_MEMR_PC, MEMR_WB_PC, WB_WBR_PC,
+		MEM_MEMR_PC, MEMR_WB_PC, WB_WBR_PC, MEM_MEMR_MemoryData, MEMR_WB_ALU, MEMR_WB_MemoryData,
 		// general
 		StatusRegIn, StatusRegOut,
 		// WB ID
@@ -28,7 +28,7 @@ module CPU(clk, rst);
 		IDR_STAT, EX_STAT, STAT_Out,
 		ID_IDR_Dest, IDR_EX_Dest, 
 		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD,
-		EX_EXR_Dest, EXR_MEM_Dest,
+		EX_EXR_Dest, EXR_MEM_Dest, MEM_MEMR_Dest, MEMR_WB_Dest,
 		ID_HZ_RegSrc2;
 
 	wire[11:0]
@@ -47,7 +47,9 @@ module CPU(clk, rst);
 		ID_IDR_I, IDR_EX_I,
 		HZ_ID_Hazard, ID_HZ_Two_Src,
 		EX_EXR_WB_EN, EX_EXR_MEM_R_EN, EX_EXR_MEM_W_EN, EX_STAT_EN, 
-		EXR_MEM_WB_EN, EXR_MEM_MEM_R_EN, EXR_MEM_MEM_W_EN; 
+		EXR_MEM_WB_EN, EXR_MEM_MEM_R_EN, EXR_MEM_MEM_W_EN,
+		MEM_MEMR_WB_EN,
+		MEMR_WB_WB_EN, MEMR_WB_MEM_R_EN; 
 	
 	IF_Stage instFetch(
 		.clk(clk), .rst(rst),    .freeze(1'b0),
@@ -124,16 +126,30 @@ module CPU(clk, rst);
 	);
 
 
-	// MEM_Stage memory(
-	// 	.clk(clk), .rst(rst), .PCIn(EXR_MEM_PC), .PCOut(MEM_MEMR_PC)
-	// );
+	MEM_Stage memory(
+		.clk(clk), .rst(rst),            .ALU_ResIn(EXR_MEM_ALU),             
+		.MEM_W_ENIn(EXR_MEM_MEM_W_EN),   .MEM_R_ENIn(EXR_MEM_MEM_R_EN),       
+		.WB_ENIn(EXR_MEM_WB_EN),         .Value_RmIn(EXR_MEM_Val_Rm),         
+		.DestIn(EXR_MEM_Dest),           .WB_ENOut(MEM_MEMR_WB_EN),           
+		.MEM_R_ENOut(MEM_MEMR_MEM_R_EN), .DataMemoryOut(MEM_MEMR_MemoryData), 
+		.DestOut(MEM_MEMR_Dest),         .ALU_ResOut(MEM_MEMR_ALU)
+	);
 
-	// MEM_Stage_Reg memoryReg(
-	// 	.clk(clk), .rst(rst), .PCIn(MEM_MEMR_PC), .PCOut(MEMR_WB_PC)
-	// );
+	MEM_Stage_Reg memoryReg(
+		.clk(clk), .rst(rst),               .clr(1'b0), .en(1'b1), 
+		.WB_ENIn(MEM_MEMR_WB_EN),           .WB_ENOut(MEMR_WB_WB_EN), 
+		.MEM_R_ENIn(MEM_MEMR_MEM_R_EN),     .MEM_R_ENOut(MEMR_WB_MEM_R_EN), 
+		.ALU_ResIn(MEM_MEMR_ALU),           .ALU_ResOut(MEMR_WB_ALU), 
+		.DataMemoryIn(MEM_MEMR_MemoryData), .DataMemoryOut(MEMR_WB_MemoryData), 
+		.DestIn(MEM_MEMR_Dest),             .DestOut(MEMR_WB_Dest)
+	);
 
-	// WB_Stage writeBack(
-	// 	.clk(clk), .rst(rst)
-	// );
+	WB_Stage writeBack(
+		.clk(clk),                     .rst(rst),           
+		.ALU_ResIn(MEMR_WB_ALU),       .DataMemoryIn(MEMR_WB_MemoryData), 
+		.MEM_R_ENIn(MEMR_WB_MEM_R_EN), .WB_DestIn(MEMR_WB_Dest), 
+		.WB_DestOut(WB_ID_WB_Dest),    .WB_ENIn(MEMR_WB_WB_EN), 
+		.WB_ENOut(WB_ID_WB_EN),        .WB_ValueOut(WB_ID_WB_Value)
+	);
 
 endmodule

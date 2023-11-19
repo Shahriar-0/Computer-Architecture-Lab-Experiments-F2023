@@ -1,7 +1,7 @@
 
 module WB_Stage(clk, rst, ALU_ResIn, DataMemoryIn, 
-                MEM_R_ENIn, WB_DestIn, WB_DestOut, MEM_R_ENOut,
-                WB_ENIn, WB_ENOut, WB_ValueOut, WB_ValueOut);
+                MEM_R_ENIn, WB_DestIn, WB_DestOut,
+                WB_ENIn, WB_ENOut, WB_ValueOut);
 
     parameter N = 32;
     input wire[0:0] clk, rst;
@@ -12,7 +12,7 @@ module WB_Stage(clk, rst, ALU_ResIn, DataMemoryIn,
 
     output wire[N - 1: 0] WB_ValueOut;
     output wire[3:0] WB_DestOut;
-    output wire[0:0] WB_ENOut, MEM_R_ENOut;
+    output wire[0:0] WB_ENOut;
 
 
     Mux2to1 mux(

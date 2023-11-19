@@ -19,12 +19,12 @@ module ALU(Val1In, Val2In, EXE_CMDIn, statusCarryIn, statusOut, ALU_ResOut);
     assign notStatusCarryInExt = {{(N-1){1'b0}}, ~statusCarryIn};
 
     always @(EXE_CMDIn or Val1In or Val2In or statusCarryInExt or notStatusCarryInExt) begin
-        ALU_ResOut = {N{1'b0}};
+        // ALU_ResOut = {N{1'b0}};
         c = 1'b0;
 
         case (EXE_CMDIn)
-            4'b0001: ALU_ResOut = Val2In;                                // MOV
-            4'b1001: ALU_ResOut = ~Val2In;                               // MVN
+            4'b0001: ALU_ResOut = Val2In;                                     // MOV
+            4'b1001: ALU_ResOut = ~Val2In;                                    // MVN
             4'b0010: {c, ALU_ResOut} = Val1In + Val2In;                       // ADD
             4'b0011: {c, ALU_ResOut} = Val1In + Val2In + statusCarryInExt;    // ADC
             4'b0100: {c, ALU_ResOut} = Val1In - Val2In;                       // SUB
