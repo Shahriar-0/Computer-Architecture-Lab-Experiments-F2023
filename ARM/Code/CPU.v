@@ -29,7 +29,7 @@ module CPU(clk, rst);
 		ID_IDR_Dest, IDR_EX_Dest, 
 		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD,
 		EX_EXR_Dest, EXR_MEM_Dest, MEM_MEMR_Dest, MEMR_WB_Dest,
-		ID_HZ_RegSrc2;
+		ID_HZ_RegSrc2, ID_HZ_Rn;
 
 	wire[11:0]
 		ID_IDR_ShiftOperand, IDR_EX_ShiftOperand;
@@ -41,51 +41,59 @@ module CPU(clk, rst);
 		ID_IDR_WB_EN, IDR_EX_WB_EN, 
 		ID_IDR_MEM_R_EN, IDR_EX_MEM_R_EN, 
 		ID_IDR_MEM_W_EN, IDR_EX_MEM_W_EN, 
-		ID_IDR_B, IDR_EX_B, 
+		ID_IDR_B, BranchTaken, 
 		ID_IDR_S, IDR_EX_S,
 		WB_ID_WB_EN, 
 		ID_IDR_I, IDR_EX_I,
-		HZ_ID_Hazard, ID_HZ_Two_Src,
+		HazardOut,
 		EX_EXR_WB_EN, EX_EXR_MEM_R_EN, EX_EXR_MEM_W_EN, EX_STAT_EN, 
 		EXR_MEM_WB_EN, EXR_MEM_MEM_R_EN, EXR_MEM_MEM_W_EN,
 		MEM_MEMR_WB_EN,
 		MEMR_WB_WB_EN, MEMR_WB_MEM_R_EN; 
 	
 	IF_Stage instFetch(
-		.clk(clk), .rst(rst),    .freeze(1'b0),
+		.clk(clk), .rst(rst),    .freeze(HazardOut),
 		.PCOut(IF_IFR_PC),       .instructionOut(IF_IFR_Instruction),  
-		.branchAddressIn(32'b0), .branchTakenIn(1'b0)
+		.branchAddressIn(EX_IF_Branch_Address), .branchTakenIn(BranchTaken)
 	); 
 
 	IF_Stage_Reg instFetchReg(
-		.clk(clk), .rst(rst),         .en(1'b1), .clr(1'b0), 
+		.clk(clk), .rst(rst),         .en(HazardOut), .clr(BranchTaken), 
 		.instrIn(IF_IFR_Instruction), .instrOut(IFR_ID_Instruction), 
 		.PCIn(IF_IFR_PC),             .PCOut(IFR_ID_PC)
 	);
 
 	ID_Stage instDecode(
 		.clk(clk),                             .rst(rst),                  
-		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(/*WB_ID_WB_EN*/1'b0),                 
+		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(WB_ID_WB_EN),                 
 		.WB_DestIn(WB_ID_WB_Dest),             .WB_ValueIn(WB_ID_WB_Value),           
-		.HazardIn(/*HZ_ID_Hazard*/ 1'b0),      .PCIn(IFR_ID_PC),                      
+		.HazardIn(HazardOut),      			   .PCIn(IFR_ID_PC),                      
 		.statusIn(STAT_Out),                   .PCOut(ID_IDR_PC),                     
 		.Val_RnOut(ID_IDR_Val_Rn),             .Val_RmOut(ID_IDR_Val_Rm),             
-		.Two_srcOut(ID_HZ_Two_Src),            .SOut(ID_IDR_S),               
+		.TwoSrcOut(ID_HZ_TwoSrc),              .SOut(ID_IDR_S),               
 		.BOut(ID_IDR_B),                       .EXE_CMDOut(ID_IDR_EXE_CMD), 
 		.MEM_W_ENOut(ID_IDR_MEM_W_EN),         .MEM_R_ENOut(ID_IDR_MEM_R_EN),      
 		.WB_ENOut(ID_IDR_WB_EN),               .DestOut(ID_IDR_Dest),         
-		.IOut(ID_IDR_I),                       .regFileInp2Out(ID_HZ_RegSrc2), 
+		.IOut(ID_IDR_I),                       .regFileInp2Out(ID_HZ_RegSrc2),
+		.RnOut(ID_HZ_Rn) 
 		.shiftOperandOut(ID_IDR_ShiftOperand), .Imm24Out(ID_IDR_Imm24)
 	);
 
+	HazardUnit hazardUnit(
+		.RnIn(ID_HZ_Rn),              .reg2In(ID_HZ_RegSrc2), 
+		.TwoSrcIn(ID_HZ_TwoSrc),      .EXE_DestIn(ID_IDR_Dest), 
+		.MEM_DestIn(MEM_MEMR_Dest),   .EXE_WB_ENIn(EX_EXR_WB_EN), 
+		.MEM_WB_ENIn(MEM_MEMR_WB_EN), .MEM_R_ENIn(1'b0), 
+		.forwardENIn(1'b0),           .HazardOut(HazardOut));
+
 	ID_Stage_Reg instDecodeReg(
-		.clk(clk), .rst(rst),                 .en(1'b1), .clr(1'b0),
+		.clk(clk), .rst(rst),                 .en(1'b1), .clr(BranchTaken),
 		.PCIn(ID_IDR_PC), 			          .PCOut(IDR_EX_PC),
 		.WB_ENIn(ID_IDR_WB_EN), 	          .WB_ENOut(IDR_EX_WB_EN), 
 		.MEM_R_ENIn(ID_IDR_MEM_R_EN),         .MEM_R_ENOut(IDR_EX_MEM_R_EN), 
 		.MEM_W_ENIn(ID_IDR_MEM_W_EN),         .MEM_W_ENOut(IDR_EX_MEM_W_EN),
 		.EXE_CMDIn(ID_IDR_EXE_CMD),           .EXE_CMDOut(IDR_EX_EXE_CMD), 
-		.BIn(ID_IDR_B), 	      	          .BOut(IDR_EX_B),
+		.BIn(ID_IDR_B), 	      	          .BOut(BranchTaken),
 		.SIn(ID_IDR_S), 	      	          .SOut(IDR_EX_S),
 		.Val_RmIn(ID_IDR_Val_Rm), 	          .Val_RmOut(IDR_EX_Val_Rm),
 		.Val_RnIn(ID_IDR_Val_Rn), 	          .Val_RnOut(IDR_EX_Val_Rn),
@@ -99,7 +107,7 @@ module CPU(clk, rst);
 	EXE_Stage execute(
 		.clk(clk), .rst(rst),                    .WB_ENIn(IDR_EX_WB_EN), 
 		.MEM_R_ENIn(IDR_EX_MEM_R_EN),            .MEM_W_ENIn(IDR_EX_MEM_W_EN), 
-		.EXE_CMDIn(IDR_EX_EXE_CMD),              .BIn(IDR_EX_B), 
+		.EXE_CMDIn(IDR_EX_EXE_CMD),               
 		.SIn(IDR_EX_S),                          .PCIn(IDR_EX_PC), 
 		.Val_RnIn(IDR_EX_Val_Rn),                .Val_RmIn(IDR_EX_Val_Rm), 
 		.shiftOperandIn(IDR_EX_ShiftOperand),    .IIn(IDR_EX_I), 

@@ -1,11 +1,11 @@
 
 module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn, 
-                 BIn, SIn, PCIn, Val_RnIn, Val_RmIn, shiftOperandIn, 
+                 SIn, PCIn, Val_RnIn, Val_RmIn, shiftOperandIn, 
                  IIn, Imm24In, DestIn, statusIn, WB_ENOut, MEM_R_ENOut, 
                  MEM_W_ENOut, ALU_ResOut, Val_RmOut, DestOut, statusOut, 
                  branchAddressOut, SOut);
     
-    input wire[0:0] clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, BIn, SIn, IIn;
+    input wire[0:0] clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, SIn, IIn;
     input wire[3:0] EXE_CMDIn, DestIn, statusIn;
     input wire[11:0] shiftOperandIn;
     input wire[23:0] Imm24In;
