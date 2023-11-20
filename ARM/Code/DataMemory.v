@@ -11,7 +11,7 @@ module DataMemory(clk, rst, ALU_ResIn, Value_RmIn,
     reg [31:0] dataMem [0:WordCount - 1]; // 256B memory
 
     wire [31:0] dataAdr, adr;
-    assign dataAdr = Value_RmIn - 32'd1024;
+    assign dataAdr =  ALU_ResIn - 32'd1024;
     assign adr = {2'b00, dataAdr[31:2]}; // Align address to the word boundary
 
     integer i;
@@ -22,7 +22,7 @@ module DataMemory(clk, rst, ALU_ResIn, Value_RmIn,
                 dataMem[i] <= 32'd0;
             end
         else if (MEM_W_ENIn)
-            dataMem[adr] <= ALU_ResIn;
+            dataMem[adr] <= Value_RmIn;
     end
 
     always @(MEM_R_ENIn or adr) begin
