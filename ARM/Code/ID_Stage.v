@@ -1,6 +1,7 @@
 
-module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardIn, PCIn, statusIn,
-                PCOut, Val_RnOut, Val_RmOut, Two_srcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
+module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, 
+                HazardIn, PCIn, statusIn, PCOut, Val_RnOut, Val_RmOut, 
+                Two_srcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
                 DestOut, IOut, regFileInp2Out, shiftOperandOut, Imm24Out);
 
     parameter N = 32;

@@ -20,7 +20,6 @@ module WB_Stage(clk, rst, ALU_ResIn, DataMemoryIn,
     );
 
     assign WB_ENOut = WB_ENIn;
-    assign WB_DestOut = WB_DestIn;
-
+    assign WB_DestOut = WB_DestIn;`
 
 endmodule

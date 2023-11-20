@@ -65,9 +65,9 @@ module CPU(clk, rst);
 
 	ID_Stage instDecode(
 		.clk(clk),                             .rst(rst),                  
-		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(/*WB_ID_WB_EN*/1'b0),                 
+		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(WB_ID_WB_EN),                 
 		.WB_DestIn(WB_ID_WB_Dest),             .WB_ValueIn(WB_ID_WB_Value),           
-		.HazardIn(/*HZ_ID_Hazard*/ 1'b0),      .PCIn(IFR_ID_PC),                      
+		.HazardIn(HZ_ID_Hazard),      	       .PCIn(IFR_ID_PC),                      
 		.statusIn(STAT_Out),                   .PCOut(ID_IDR_PC),                     
 		.Val_RnOut(ID_IDR_Val_Rn),             .Val_RmOut(ID_IDR_Val_Rm),             
 		.Two_srcOut(ID_HZ_Two_Src),            .SOut(ID_IDR_S),               
