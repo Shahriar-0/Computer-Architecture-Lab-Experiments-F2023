@@ -1,6 +1,7 @@
 
-module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardIn, PCIn, statusIn,
-                PCOut, Val_RnOut, Val_RmOut, TwoSrcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
+module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, 
+                HazardIn, PCIn, statusIn, PCOut, Val_RnOut, Val_RmOut, 
+                TwoSrcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut,
                 DestOut, IOut, regFileInp2Out, RnOut, shiftOperandOut, Imm24Out);
 
     parameter N = 32;
@@ -49,8 +50,9 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardI
     ControlUnit controlUnit(
         // Control Unit module for decode instructions and set control signals
         .opCodeIn(opCode), .SIn(s), .modeIn(mode), 
-        .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), .BOut(controlUnitOut[5]), 
-        .MEM_W_ENOut(controlUnitOut[6]), .MEM_R_ENOut(controlUnitOut[7]), .WB_ENOut(controlUnitOut[8])
+        .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), 
+        .BOut(controlUnitOut[5]), .MEM_W_ENOut(controlUnitOut[6]), 
+        .MEM_R_ENOut(controlUnitOut[7]), .WB_ENOut(controlUnitOut[8])
     );
 
     wire[0:0] conditionCheckOut;
@@ -84,9 +86,12 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, HazardI
     );
     assign regFileInp2Out = regInp2;
 
+    wire [0:0] notBranch;
+    assign notBranch = ~controlUnitOut[5];
+
     RegisterFile registerFile(
         // Register file :)
-        .clk(clk), .rst(rst), .regWrite(WB_ENIn),
+        .clk(clk), .rst(rst), .regWrite(WB_ENIn), .regRead(notBranch),
         .readRegister1(rn), .readRegister2(regInp2),
         .writeRegister(WB_DestIn), .writeData(WB_ValueIn),
         .readData1(Val_RnOut), .readData2(Val_RmOut)

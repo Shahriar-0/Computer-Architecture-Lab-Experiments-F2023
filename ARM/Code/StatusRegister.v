@@ -7,7 +7,7 @@ module StatusRegister(clk, rst, en, statIn, statOut);
     output reg[3:0] statOut;
 
 
-    always@(negedge clk, posedge rst) begin
+    always@(negedge clk or posedge rst) begin
 
         if(rst) begin
             statOut <= 4'b0;

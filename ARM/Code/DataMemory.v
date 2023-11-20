@@ -16,7 +16,7 @@ module DataMemory(clk, rst, ALU_ResIn, Value_RmIn,
 
     integer i;
 
-    always @(negedge clk, posedge rst) begin
+    always @(negedge clk or posedge rst) begin
         if (rst)
             for (i = 0; i < WordCount; i = i + 1) begin
                 dataMem[i] <= 32'd0;
