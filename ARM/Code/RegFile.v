@@ -21,11 +21,13 @@ module RegisterFile(clk, rst, regWrite, regRead,
         if (rst)
             for (i = 0; i < WORD_COUNT; i = i + 1)
                 registerFile[i] <= i;
-        if (regWrite & (|writeRegister))
+        if (regWrite)
             registerFile[writeRegister] <= writeData;
     end
 
-    assign readData1 = (regRead)? registerFile[readRegister1] : {WORD_LEN{1'bz}};
-    assign readData2 = (regRead)? registerFile[readRegister2] : {WORD_LEN{1'bz}};
+    // assign readData1 = (regRead)? registerFile[readRegister1] : {WORD_LEN{1'bz}};
+    // assign readData2 = (regRead)? registerFile[readRegister2] : {WORD_LEN{1'bz}};
+    assign readData1 = registerFile[readRegister1];
+    assign readData2 = registerFile[readRegister2];
 
 endmodule

@@ -16,7 +16,7 @@ module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, WB_ENIn,
 
 
     DataMemory DM(
-        .clk(clk), .rst(rst), .ALU_ResIn(ALU_ResIn), 
+        .clk(clk), .rst(rst), .ALU_ResIn(ALU_ResIn),
         .Value_RmIn(Value_RmIn), .MEM_W_ENIn(MEM_W_ENIn), 
         .MEM_R_ENIn(MEM_R_ENIn), .resultOut(DataMemoryOut)
     );
@@ -24,5 +24,6 @@ module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, WB_ENIn,
     assign MEM_R_ENOut = MEM_R_ENIn;
     assign WB_ENOut = WB_ENIn;
     assign DestOut = DestIn;
+    assign ALU_ResOut = ALU_ResIn;
 
 endmodule

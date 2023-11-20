@@ -22,6 +22,7 @@ module EXE_Stage_Reg(clk, rst, en, clr, WB_ENIn, WB_ENOut,
             MEM_W_ENOut     <= 1'b0;
             DestOut         <= 4'b0;
             Val_RmOut       <= 32'b0;
+            ALU_ResOut      <= 32'b0;
         end 
         
         else if (clr) begin
@@ -30,6 +31,7 @@ module EXE_Stage_Reg(clk, rst, en, clr, WB_ENIn, WB_ENOut,
             MEM_W_ENOut     <= 1'b0;
             DestOut         <= 4'b0;
             Val_RmOut       <= 32'b0;
+            ALU_ResOut      <= 32'b0;
         end
 
         else if (en) begin
@@ -38,6 +40,7 @@ module EXE_Stage_Reg(clk, rst, en, clr, WB_ENIn, WB_ENOut,
             MEM_W_ENOut     <= MEM_W_ENIn;
             DestOut         <= DestIn;
             Val_RmOut       <= Val_RmIn;
+            ALU_ResOut      <= ALU_ResIn;
         end
     end
 endmodule

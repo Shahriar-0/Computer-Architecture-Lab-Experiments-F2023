@@ -58,7 +58,7 @@ module CPU(clk, rst);
 	); 
 
 	IF_Stage_Reg instFetchReg(
-		.clk(clk), .rst(rst),         .en(HazardOut), .clr(BranchTaken), 
+		.clk(clk), .rst(rst),         .en(~HazardOut), .clr(BranchTaken), 
 		.instrIn(IF_IFR_Instruction), .instrOut(IFR_ID_Instruction), 
 		.PCIn(IF_IFR_PC),             .PCOut(IFR_ID_PC)
 	);
@@ -84,7 +84,8 @@ module CPU(clk, rst);
 		.TwoSrcIn(ID_HZ_TwoSrc),      .EXE_DestIn(ID_IDR_Dest), 
 		.MEM_DestIn(MEM_MEMR_Dest),   .EXE_WB_ENIn(EX_EXR_WB_EN), 
 		.MEM_WB_ENIn(MEM_MEMR_WB_EN), .MEM_R_ENIn(1'b0), 
-		.forwardENIn(1'b0),           .HazardOut(HazardOut));
+		.forwardENIn(1'b0),           .HazardOut(HazardOut)
+	);
 
 	ID_Stage_Reg instDecodeReg(
 		.clk(clk), .rst(rst),                 .en(1'b1), .clr(BranchTaken),
