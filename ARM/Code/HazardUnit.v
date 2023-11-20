@@ -8,8 +8,7 @@ module HazardUnit(RnIn, reg2In, TwoSrcIn, EXE_DestIn, MEM_DestIn, EXE_WB_ENIn,
     input wire[0:0] forwardENIn;
     output reg HazardOut;
 
-    always @(RnIn, reg2In, EXE_DestIn, MEM_DestIn, 
-            EXE_WB_ENIn, MEM_WB_ENIn, MEM_R_ENIn, TwoSrcIn, forwardENIn) begin
+    always @(*) begin
         HazardOut = 1'b0;
         // if (forwardENIn) begin
         //     if (MEM_R_ENIn) begin
