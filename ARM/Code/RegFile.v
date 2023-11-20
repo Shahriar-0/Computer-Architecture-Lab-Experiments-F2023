@@ -1,4 +1,4 @@
-module RegisterFile(clk, rst, regWrite, regRead
+module RegisterFile(clk, rst, regWrite, regRead,
                     readRegister1, readRegister2,
                     writeRegister, writeData,
                     readData1, readData2);
@@ -6,7 +6,7 @@ module RegisterFile(clk, rst, regWrite, regRead
     parameter WORD_LEN = 32;
     parameter WORD_COUNT = 16;
 
-    input regWrite, clk, rst;
+    input clk, rst, regWrite, regRead;
     input [3:0] readRegister1, readRegister2, writeRegister;
     input [WORD_LEN-1:0] writeData;
     

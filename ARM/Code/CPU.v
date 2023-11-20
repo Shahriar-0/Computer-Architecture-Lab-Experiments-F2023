@@ -75,7 +75,7 @@ module CPU(clk, rst);
 		.MEM_W_ENOut(ID_IDR_MEM_W_EN),         .MEM_R_ENOut(ID_IDR_MEM_R_EN),      
 		.WB_ENOut(ID_IDR_WB_EN),               .DestOut(ID_IDR_Dest),         
 		.IOut(ID_IDR_I),                       .regFileInp2Out(ID_HZ_RegSrc2),
-		.RnOut(ID_HZ_Rn) 
+		.RnOut(ID_HZ_Rn),
 		.shiftOperandOut(ID_IDR_ShiftOperand), .Imm24Out(ID_IDR_Imm24)
 	);
 
