@@ -16,6 +16,10 @@ module RegisterFile(clk, rst, regWrite, regRead,
 
     integer i;
 
+    initial begin
+        for (i = 0; i < WORD_COUNT; i = i + 1)
+            registerFile[i] <= i;
+    end
 
     always @(negedge clk) begin
         if (rst)
