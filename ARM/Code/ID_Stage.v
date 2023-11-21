@@ -97,7 +97,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
         .readData1(Val_RnOut), .readData2(Val_RmOut)
     );
 
-    assign Two_srcOut = ~i | signals[6];
+    assign TwoSrcOut = ~i | signals[6];
 
     assign PCOut = PCIn;
 
