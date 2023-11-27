@@ -29,9 +29,9 @@ module RegisterFile(clk, rst, regWrite, regRead,
             registerFile[writeRegister] <= writeData;
     end
 
-    // assign readData1 = (regRead)? registerFile[readRegister1] : {WORD_LEN{1'bz}};
-    // assign readData2 = (regRead)? registerFile[readRegister2] : {WORD_LEN{1'bz}};
-    assign readData1 = registerFile[readRegister1];
-    assign readData2 = registerFile[readRegister2];
+    assign readData1 = (regRead)? registerFile[readRegister1] : {WORD_LEN{1'bz}};
+    assign readData2 = (regRead)? registerFile[readRegister2] : {WORD_LEN{1'bz}};
+    // assign readData1 = registerFile[readRegister1];
+    // assign readData2 = registerFile[readRegister2];
 
 endmodule
