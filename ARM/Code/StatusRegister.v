@@ -13,7 +13,7 @@ module StatusRegister(clk, rst, en, statIn, statOut);
             statOut <= 4'b0;
         end
 
-        if(en) begin
+        else if(en) begin
             statOut <= statIn;
         end
 
