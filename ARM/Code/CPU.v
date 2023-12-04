@@ -40,7 +40,7 @@ module CPU(clk, rst, forwardENIn);
 
 	wire[31:0]
 			MEM_EX_ALU_Res;
-	wire [0:0] 
+	wire[0:0] 
 		ID_IDR_WB_EN, IDR_EX_WB_EN, 
 		ID_IDR_MEM_R_EN, IDR_EX_MEM_R_EN, 
 		ID_IDR_MEM_W_EN, IDR_EX_MEM_W_EN, 
@@ -53,6 +53,9 @@ module CPU(clk, rst, forwardENIn);
 		EXR_MEM_WB_EN, EXR_MEM_MEM_R_EN, EXR_MEM_MEM_W_EN,
 		MEM_MEMR_WB_EN,
 		MEMR_WB_WB_EN, MEMR_WB_MEM_R_EN; 
+
+	wire[1:0]
+		selSrc1, selSrc2;
 	
 	IF_Stage instFetch(
 		.clk(clk), .rst(rst),    .freeze(HazardOut),
@@ -107,8 +110,8 @@ module CPU(clk, rst, forwardENIn);
 		.Imm24In(ID_IDR_Imm24),               .Imm24Out(IDR_EX_Imm24), 
 		.DestIn(ID_IDR_Dest),                 .DestOut(IDR_EX_Dest), 
 		.statusIn(STAT_Out),                  .statusOut(IDR_STAT),
-		// .src1In(ID_IDR_src1),   		      .src1Out(IDR_EX_src1),
-		// .src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2),
+		.src1In(ID_IDR_src1),   		      .src1Out(IDR_EX_src1),
+		.src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2),
 	);
 
 	EXE_Stage execute(
@@ -166,7 +169,7 @@ module CPU(clk, rst, forwardENIn);
 		.src1In(IDR_EX_src1), .src2In(IDR_EX_src2), 
 		.MEM_MEMR_WB_ENIn(MEM_MEMR_WB_EN), .WB_ID_WB_ENIn(WB_ID_WB_EN), 
 		.MEM_MEMR_DestIn(MEM_MEMR_Dest), .WB_ID_WB_DestIn(WB_ID_WB_Dest), 
-		.selSrc1Out(IDR_MEM_sr), .selSrc2Out()
+		.selSrc1Out(selSrc1), .selSrc2Out(selSrc2)
 	);
 
 	WB_Stage writeBack(
