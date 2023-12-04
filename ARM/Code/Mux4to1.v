@@ -1,7 +1,7 @@
 module Mux4to1(a, b, c, d, s, out);
     parameter N = 32;
     input[N - 1:0] a, b, c, d;
-    input[0:0] s;
+    input[1:0] s;
 
     output[N - 1:0] out;
 

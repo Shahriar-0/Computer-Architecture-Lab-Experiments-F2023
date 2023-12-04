@@ -13,7 +13,7 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
     input wire[0:0] WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, BIn, SIn, IIn;
     output reg[0:0] WB_ENOut,MEM_R_ENOut,MEM_W_ENOut,BOut,SOut,IOut;
 
-    input wire[3:0] EXE_CMDIn, DestIn, statusIn src1In, src2In;
+    input wire[3:0] EXE_CMDIn, DestIn, statusIn, src1In, src2In;
     output reg[3:0] EXE_CMDOut,DestOut, statusOut, src1Out, src2Out;
 
     input wire[11:0] shiftOperandIn;

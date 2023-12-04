@@ -111,7 +111,7 @@ module CPU(clk, rst, forwardENIn);
 		.DestIn(ID_IDR_Dest),                 .DestOut(IDR_EX_Dest), 
 		.statusIn(STAT_Out),                  .statusOut(IDR_STAT),
 		.src1In(ID_IDR_src1),   		      .src1Out(IDR_EX_src1),
-		.src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2),
+		.src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2)
 	);
 
 	EXE_Stage execute(
@@ -126,7 +126,9 @@ module CPU(clk, rst, forwardENIn);
 		.MEM_R_ENOut(EX_EXR_MEM_R_EN),           .MEM_W_ENOut(EX_EXR_MEM_W_EN), 
 		.ALU_ResOut(EX_EXR_ALU),                 .Val_RmOut(EX_EXR_Val_Rm), 
 		.DestOut(EX_EXR_Dest),                   .statusOut(EX_STAT), 
-		.branchAddressOut(EX_IF_Branch_Address), .SOut(EX_STAT_EN)
+		.branchAddressOut(EX_IF_Branch_Address), .SOut(EX_STAT_EN),
+		.WB_ValueIn(WB_ID_WB_Value),  		     .ALU_ResIn(MEM_EX_ALU_Res),
+		.selSrc1In(selSrc1),     				 .selSrc2In(selSrc2)
 	);
 
 	EXE_Stage_Reg executeReg(
@@ -136,8 +138,7 @@ module CPU(clk, rst, forwardENIn);
 		.MEM_W_ENIn(EX_EXR_MEM_W_EN), .MEM_W_ENOut(EXR_MEM_MEM_W_EN), 
 		.ALU_ResIn(EX_EXR_ALU),       .ALU_ResOut(EXR_MEM_ALU), 
 		.Val_RmIn(EX_EXR_Val_Rm),     .Val_RmOut(EXR_MEM_Val_Rm), 
-		.DestIn(EX_EXR_Dest),         .DestOut(EXR_MEM_Dest), 
-		.WB_ValueIn(WB_ID_WB_Value),  .ALU_ResIn(MEM_EX_ALU_Res)
+		.DestIn(EX_EXR_Dest),         .DestOut(EXR_MEM_Dest)
 	);
 
 	StatusRegister statusRegister(
