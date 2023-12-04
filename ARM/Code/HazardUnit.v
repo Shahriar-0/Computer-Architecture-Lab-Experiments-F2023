@@ -10,15 +10,15 @@ module HazardUnit(RnIn, reg2In, TwoSrcIn, EXE_DestIn, MEM_DestIn, EXE_WB_ENIn,
 
     always @(*) begin
         HazardOut = 1'b0;
-        // if (forwardENIn) begin
-        //     if (MEM_R_ENIn) begin
-        //         if (RnIn == EXE_DestIn || (TwoSrcIn && reg2In == EXE_DestIn)) begin
-        //             HazardOut = 1'b1;
-        //         end
-        //     end
-        // end
+        if (forwardENIn) begin
+            if (MEM_R_ENIn) begin
+                if (RnIn == EXE_DestIn || (TwoSrcIn && reg2In == EXE_DestIn)) begin
+                    HazardOut = 1'b1;
+                end
+            end
+        end
         
-        // else begin
+        else begin
             if (EXE_WB_ENIn) begin
                 if (RnIn == EXE_DestIn || (TwoSrcIn && reg2In == EXE_DestIn)) begin
                     HazardOut = 1'b1;
@@ -29,6 +29,6 @@ module HazardUnit(RnIn, reg2In, TwoSrcIn, EXE_DestIn, MEM_DestIn, EXE_WB_ENIn,
                     HazardOut = 1'b1;
                 end
             end
-        // end
+        end
     end
 endmodule
