@@ -26,6 +26,8 @@ module CPU(clk, rst, forwardENIn);
 		WB_ID_WB_Dest, 
 		IDR_STAT, EX_STAT, STAT_Out,
 		ID_IDR_Dest, IDR_EX_Dest, 
+		ID_IDR_src1, ID_IDR_src2,  
+		IDR_EX_src1, IDR_EX_src2,  
 		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD,
 		EX_EXR_Dest, EXR_MEM_Dest, MEM_MEMR_Dest, MEMR_WB_Dest,
 		ID_HZ_RegSrc2, ID_HZ_Rn;
@@ -76,8 +78,9 @@ module CPU(clk, rst, forwardENIn);
 		.MEM_W_ENOut(ID_IDR_MEM_W_EN),         .MEM_R_ENOut(ID_IDR_MEM_R_EN),      
 		.WB_ENOut(ID_IDR_WB_EN),               .DestOut(ID_IDR_Dest),         
 		.IOut(ID_IDR_I),                       .regFileInp2Out(ID_HZ_RegSrc2),
-		.RnOut(ID_HZ_Rn),
-		.shiftOperandOut(ID_IDR_ShiftOperand), .Imm24Out(ID_IDR_Imm24)
+		.RnOut(ID_HZ_Rn),					   .Imm24Out(ID_IDR_Imm24),
+		.src1Out(ID_IDR_src1), 				   .src2Out(ID_IDR_src2),
+		.shiftOperandOut(ID_IDR_ShiftOperand)
 	);
 
 	HazardUnit hazardUnit(
@@ -103,7 +106,9 @@ module CPU(clk, rst, forwardENIn);
 		.IIn(ID_IDR_I),                       .IOut(IDR_EX_I),      
 		.Imm24In(ID_IDR_Imm24),               .Imm24Out(IDR_EX_Imm24), 
 		.DestIn(ID_IDR_Dest),                 .DestOut(IDR_EX_Dest), 
-		.statusIn(STAT_Out),                  .statusOut(IDR_STAT)
+		.statusIn(STAT_Out),                  .statusOut(IDR_STAT),
+		.src1In(ID_IDR_src1),   		      .src1Out(IDR_EX_src1),
+		.src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2),
 	);
 
 	EXE_Stage execute(

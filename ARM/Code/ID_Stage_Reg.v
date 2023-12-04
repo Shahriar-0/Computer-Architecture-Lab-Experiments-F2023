@@ -4,7 +4,8 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
                     EXE_CMDIn, EXE_CMDOut, BIn, BOut, SIn, SOut, 
                     Val_RmIn, Val_RmOut, Val_RnIn, Val_RnOut,
                     shiftOperandIn, shiftOperandOut, IIn, IOut,
-                    Imm24In, Imm24Out, DestIn, DestOut, statusIn, statusOut);
+                    Imm24In, Imm24Out, DestIn, DestOut, statusIn, statusOut,
+                    src1In, src1Out, src2In, src2Out);
     parameter N = 32;
 
     input wire[0:0] clk, rst, en, clr;
@@ -12,8 +13,8 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
     input wire[0:0] WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, BIn, SIn, IIn;
     output reg[0:0] WB_ENOut,MEM_R_ENOut,MEM_W_ENOut,BOut,SOut,IOut;
 
-    input wire[3:0] EXE_CMDIn, DestIn, statusIn;
-    output reg[3:0] EXE_CMDOut,DestOut,statusOut;
+    input wire[3:0] EXE_CMDIn, DestIn, statusIn src1In, src2In;
+    output reg[3:0] EXE_CMDOut,DestOut, statusOut, src1Out, src2Out;
 
     input wire[11:0] shiftOperandIn;
     output reg[11:0] shiftOperandOut;
@@ -34,6 +35,8 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
             BOut            <= 1'b0;
             SOut            <= 1'b0;
             IOut            <= 1'b0;
+            src1Out         <= 4'b0;
+            src2Out         <= 4'b0;
             EXE_CMDOut      <= 4'b0;
             DestOut         <= 4'b0;
             statusOut       <= 4'b0;
@@ -51,6 +54,8 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
             BOut            <= 1'b0;
             SOut            <= 1'b0;
             IOut            <= 1'b0;
+            src1Out         <= 4'b0;
+            src2Out         <= 4'b0;
             EXE_CMDOut      <= 4'b0;
             DestOut         <= 4'b0;
             statusOut       <= 4'b0;
@@ -76,6 +81,8 @@ module ID_Stage_Reg(clk, rst, en, clr, PCIn, PCOut, WB_ENIn, WB_ENOut,
             PCOut           <= PCIn;
             Val_RmOut       <= Val_RmIn;
             Val_RnOut       <= Val_RnIn;
+            src1Out         <= src1In;
+            src2Out         <= src2In;
         end
     end
 endmodule

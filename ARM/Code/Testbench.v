@@ -2,7 +2,7 @@
 
 module Testbench();
     reg clk, rst;
-    CPU cpu(.clk(clk), .rst(rst), .forwardENIn(1'b0));
+    CPU cpu(.clk(clk), .rst(rst), .forwardENIn(1'b1));
 
     always #5 clk = ~clk;
 
