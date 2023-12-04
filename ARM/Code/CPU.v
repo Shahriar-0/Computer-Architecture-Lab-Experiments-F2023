@@ -1,6 +1,6 @@
-module CPU(clk, rst);
+module CPU(clk, rst, forwardENIn);
 
-    input clk, rst;
+    input clk, rst, forwardENIn;
 
     wire[31:0] 
 		// IF IFR ID
@@ -84,7 +84,7 @@ module CPU(clk, rst);
 		.TwoSrcIn(ID_HZ_TwoSrc),      .EXE_DestIn(EX_EXR_Dest), 
 		.MEM_DestIn(MEM_MEMR_Dest),   .EXE_WB_ENIn(EX_EXR_WB_EN), 
 		.MEM_WB_ENIn(MEM_MEMR_WB_EN), .MEM_R_ENIn(1'b0), 
-		.forwardENIn(1'b0),           .HazardOut(HazardOut)
+		.forwardENIn(forwardENIn),    .HazardOut(HazardOut)
 	);
 
 	ID_Stage_Reg instDecodeReg(
