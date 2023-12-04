@@ -7,7 +7,6 @@ module CPU(clk, rst, forwardENIn);
 		IF_IFR_PC, IFR_ID_PC, 
 		IF_IFR_Instruction, IFR_ID_Instruction,
 		IFR_ID_MEM_W,
-		// TODO Complete these wires for instance
 		// ID IDR EX
 		ID_IDR_PC, IDR_EX_PC,  
 		ID_IDR_Val_Rn, IDR_EX_Val_Rn, 
@@ -37,6 +36,8 @@ module CPU(clk, rst, forwardENIn);
 	wire[23:0]
 		ID_IDR_Imm24, IDR_EX_Imm24;
 
+	wire[31:0]
+			MEM_EX_ALU_Res;
 	wire [0:0] 
 		ID_IDR_WB_EN, IDR_EX_WB_EN, 
 		ID_IDR_MEM_R_EN, IDR_EX_MEM_R_EN, 
@@ -127,7 +128,8 @@ module CPU(clk, rst, forwardENIn);
 		.MEM_W_ENIn(EX_EXR_MEM_W_EN), .MEM_W_ENOut(EXR_MEM_MEM_W_EN), 
 		.ALU_ResIn(EX_EXR_ALU),       .ALU_ResOut(EXR_MEM_ALU), 
 		.Val_RmIn(EX_EXR_Val_Rm),     .Val_RmOut(EXR_MEM_Val_Rm), 
-		.DestIn(EX_EXR_Dest),         .DestOut(EXR_MEM_Dest)
+		.DestIn(EX_EXR_Dest),         .DestOut(EXR_MEM_Dest), 
+		.WB_ValueIn(WB_ID_WB_Value),  .ALU_ResIn(MEM_EX_ALU_Res)
 	);
 
 	StatusRegister statusRegister(
@@ -141,7 +143,8 @@ module CPU(clk, rst, forwardENIn);
 		.WB_ENIn(EXR_MEM_WB_EN),         .Value_RmIn(EXR_MEM_Val_Rm),         
 		.DestIn(EXR_MEM_Dest),           .WB_ENOut(MEM_MEMR_WB_EN),           
 		.MEM_R_ENOut(MEM_MEMR_MEM_R_EN), .DataMemoryOut(MEM_MEMR_MemoryData), 
-		.DestOut(MEM_MEMR_Dest),         .ALU_ResOut(MEM_MEMR_ALU)
+		.DestOut(MEM_MEMR_Dest),         .ALU_ResOut(MEM_MEMR_ALU),
+		.MEM_EX_ALU_ResOut(MEM_EX_ALU_Res)
 	);
 
 	MEM_Stage_Reg memoryReg(
