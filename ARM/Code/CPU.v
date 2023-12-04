@@ -107,8 +107,8 @@ module CPU(clk, rst, forwardENIn);
 		.Imm24In(ID_IDR_Imm24),               .Imm24Out(IDR_EX_Imm24), 
 		.DestIn(ID_IDR_Dest),                 .DestOut(IDR_EX_Dest), 
 		.statusIn(STAT_Out),                  .statusOut(IDR_STAT),
-		.src1In(ID_IDR_src1),   		      .src1Out(IDR_EX_src1),
-		.src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2),
+		// .src1In(ID_IDR_src1),   		      .src1Out(IDR_EX_src1),
+		// .src2In(ID_IDR_src2),   		      .src2Out(IDR_EX_src2),
 	);
 
 	EXE_Stage execute(
@@ -159,6 +159,14 @@ module CPU(clk, rst, forwardENIn);
 		.ALU_ResIn(MEM_MEMR_ALU),           .ALU_ResOut(MEMR_WB_ALU), 
 		.DataMemoryIn(MEM_MEMR_MemoryData), .DataMemoryOut(MEMR_WB_MemoryData), 
 		.DestIn(MEM_MEMR_Dest),             .DestOut(MEMR_WB_Dest)
+	);
+
+	ForwardingUnit forward(
+		.forwardEnIn(forwardENIn), 
+		.src1In(IDR_EX_src1), .src2In(IDR_EX_src2), 
+		.MEM_MEMR_WB_ENIn(MEM_MEMR_WB_EN), .WB_ID_WB_ENIn(WB_ID_WB_EN), 
+		.MEM_MEMR_DestIn(MEM_MEMR_Dest), .WB_ID_WB_DestIn(WB_ID_WB_Dest), 
+		.selSrc1Out(IDR_MEM_sr), .selSrc2Out()
 	);
 
 	WB_Stage writeBack(
