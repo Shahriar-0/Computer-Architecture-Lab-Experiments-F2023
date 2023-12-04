@@ -90,7 +90,7 @@ module CPU(clk, rst, forwardENIn);
 		.RnIn(ID_HZ_Rn),              .reg2In(ID_HZ_RegSrc2), 
 		.TwoSrcIn(ID_HZ_TwoSrc),      .EXE_DestIn(EX_EXR_Dest), 
 		.MEM_DestIn(MEM_MEMR_Dest),   .EXE_WB_ENIn(EX_EXR_WB_EN), 
-		.MEM_WB_ENIn(MEM_MEMR_WB_EN), .MEM_R_ENIn(1'b0), 
+		.MEM_WB_ENIn(MEM_MEMR_WB_EN), .MEM_R_ENIn(IDR_EX_MEM_R_EN), 
 		.forwardENIn(forwardENIn),    .HazardOut(HazardOut)
 	);
 

@@ -37,7 +37,7 @@ module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn,
     );
 
     ALU alu(
-        .Val1In(val1),     .Val2In(val2), 
+        .Val1In(val1),         .Val2In(val2), 
         .EXE_CMDIn(EXE_CMDIn), .statusCarryIn(statusIn[1]), 
         .statusOut(statusOut), .ALU_ResOut(ALU_ResOut)
     );
@@ -49,7 +49,7 @@ module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn,
     assign WB_ENOut    = WB_ENIn;
     assign MEM_R_ENOut = MEM_R_ENIn;
     assign MEM_W_ENOut = MEM_W_ENIn;
-    assign Val_RmOut   = Val_RmIn;
+    assign Val_RmOut   = val2GeneratorIn; //FIXME :( fix name
     assign DestOut     = DestIn;
     assign SOut        = SIn;
 
