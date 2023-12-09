@@ -8,15 +8,10 @@ module StatusRegister(clk, rst, en, statIn, statOut);
 
 
     always@(negedge clk or posedge rst) begin
-
-        if(rst) begin
+        if(rst) 
             statOut <= 4'b0;
-        end
-
-        else if(en) begin
+        else if(en) 
             statOut <= statIn;
-        end
-
     end
 
 endmodule
