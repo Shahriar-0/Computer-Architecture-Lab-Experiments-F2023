@@ -83,7 +83,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
 
     wire[3:0] regInp2;
     Mux2to1 #(4) regInp2Mux(
-        // select rd as a source just when the instruction is STR
+        // select rd as a source just when the instruction is LDR
         .a(rm), .b(rd), .s(signals[6]), .out(regInp2)        
     );
     assign regFileInp2Out = regInp2;
