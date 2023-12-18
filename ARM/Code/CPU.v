@@ -12,7 +12,7 @@ module CPU(clk, rst, forwardENIn);
 		ID_IDR_Val_Rn, IDR_EX_Val_Rn, 
 		ID_IDR_Val_Rm, IDR_EX_Val_Rm, 
 		// EX EXR MEM 
-		EX_EXR_ALU, EX_EXR_Val_Rm, EXR_MEM_ALU, EXR_MEM_Val_Rm, MEM_MEMR_ALU,
+		EX_EXR_ALU, EX_EXR_Val_Rm, EXR_MEMR_ALU, EXR_MEM_Val_Rm, MEM_MEMR_ALU,
 		// MEM MEMR WB
 		MEM_MEMR_PC, MEMR_WB_PC, WB_WBR_PC, MEM_MEMR_MemoryData, MEMR_WB_ALU, MEMR_WB_MemoryData,
 		// general
@@ -29,7 +29,7 @@ module CPU(clk, rst, forwardENIn);
 		ID_IDR_src1, ID_IDR_src2,  
 		IDR_EX_src1, IDR_EX_src2,  
 		ID_IDR_EXE_CMD, IDR_EX_EXE_CMD,
-		EX_EXR_Dest, EXR_MEM_Dest, MEM_MEMR_Dest, MEMR_WB_Dest,
+		EX_EXR_Dest, EXR_MEMR_Dest, MEM_MEMR_Dest, MEMR_WB_Dest,
 		ID_HZ_RegSrc2, ID_HZ_Rn;
 
 	wire[11:0]
@@ -50,7 +50,7 @@ module CPU(clk, rst, forwardENIn);
 		ID_IDR_I, IDR_EX_I,
 		HazardOut,
 		EX_EXR_WB_EN, EX_EXR_MEM_R_EN, EX_EXR_MEM_W_EN, EX_STAT_EN, 
-		EXR_MEM_WB_EN, EXR_MEM_MEM_R_EN, EXR_MEM_MEM_W_EN,
+		EXR_MEMR_WB_EN, EXR_MEMR_MEM_R_EN, EXR_MEM_MEM_W_EN,
 		MEM_MEMR_WB_EN,
 		MEMR_WB_WB_EN, MEMR_WB_MEM_R_EN,
 		SC_READY; 
@@ -139,12 +139,12 @@ module CPU(clk, rst, forwardENIn);
 
 	EXE_Stage_Reg executeReg(
 		.clk(clk), .rst(rst),         .en(SC_READY), .clr(1'b0), 
-		.WB_ENIn(EX_EXR_WB_EN),       .WB_ENOut(EXR_MEM_WB_EN), 
-		.MEM_R_ENIn(EX_EXR_MEM_R_EN), .MEM_R_ENOut(EXR_MEM_MEM_R_EN), 
+		.WB_ENIn(EX_EXR_WB_EN),       .WB_ENOut(EXR_MEMR_WB_EN), 
+		.MEM_R_ENIn(EX_EXR_MEM_R_EN), .MEM_R_ENOut(EXR_MEMR_MEM_R_EN), 
 		.MEM_W_ENIn(EX_EXR_MEM_W_EN), .MEM_W_ENOut(EXR_MEM_MEM_W_EN), 
-		.ALU_ResIn(EX_EXR_ALU),       .ALU_ResOut(EXR_MEM_ALU), 
+		.ALU_ResIn(EX_EXR_ALU),       .ALU_ResOut(EXR_MEMR_ALU), 
 		.Val_RmIn(EX_EXR_Val_Rm),     .Val_RmOut(EXR_MEM_Val_Rm), 
-		.DestIn(EX_EXR_Dest),         .DestOut(EXR_MEM_Dest)
+		.DestIn(EX_EXR_Dest),         .DestOut(EXR_MEMR_Dest)
 	);
 
 	StatusRegister statusRegister(
@@ -153,10 +153,10 @@ module CPU(clk, rst, forwardENIn);
 
 
 	// MEM_Stage memory(
-	// 	.clk(clk), .rst(rst),            .ALU_ResIn(EXR_MEM_ALU),             
-	// 	.MEM_W_ENIn(EXR_MEM_MEM_W_EN),   .MEM_R_ENIn(EXR_MEM_MEM_R_EN),       
-	// 	.WB_ENIn(EXR_MEM_WB_EN),         .Value_RmIn(EXR_MEM_Val_Rm),         
-	// 	.DestIn(EXR_MEM_Dest),           .WB_ENOut(MEM_MEMR_WB_EN),           
+	// 	.clk(clk), .rst(rst),            .ALU_ResIn(EXR_MEMR_ALU),             
+	// 	.MEM_W_ENIn(EXR_MEM_MEM_W_EN),   .MEM_R_ENIn(EXR_MEMR_MEM_R_EN),       
+	// 	.WB_ENIn(EXR_MEMR_WB_EN),         .Value_RmIn(EXR_MEM_Val_Rm),         
+	// 	.DestIn(EXR_MEMR_Dest),           .WB_ENOut(MEM_MEMR_WB_EN),           
 	// 	.MEM_R_ENOut(MEM_MEMR_MEM_R_EN), .DataMemoryOut(MEM_MEMR_MemoryData), 
 	// 	.DestOut(MEM_MEMR_Dest),         .ALU_ResOut(MEM_MEMR_ALU),
 	// 	.MEM_EX_ALU_ResOut(MEM_EX_ALU_Res)
@@ -164,8 +164,8 @@ module CPU(clk, rst, forwardENIn);
 
 	SramController sramcontroller(
     	.clk(clk), .rst(rst),
-    	.wrEnIn(EXR_MEM_MEM_W_EN), .rdEnIn(EXR_MEM_MEM_R_EN),
-    	.addressIn(EXR_MEM_ALU),
+    	.wrEnIn(EXR_MEM_MEM_W_EN), .rdEnIn(EXR_MEMR_MEM_R_EN),
+    	.addressIn(EXR_MEMR_ALU),
     	.writeDataIn(EXR_MEM_Val_Rm),
     	.readDataOut(SC_READ_DATA),
     	.readyOut(SC_READY),            // to freeze other stages
@@ -177,15 +177,21 @@ module CPU(clk, rst, forwardENIn);
     	.SRAM_WE_NOut(SC_SRAM_WE_N),        // SRAM Write enable
     	.SRAM_CE_NOut(SC_SRAM_CE_N),            // SRAM Chip enable
     	.SRAM_OE_NOut(SC_SRAM_OE_N)             // SRAM Output enable
-);
+	);
+
+	SRAM sram(
+		.clk(clk), .rst(rst), 
+		.SRAM_WE_NIn(SC_SRAM_WE_N), .SRAM_ADDRIn(SC_SRAM_ADDR), 
+		.SRAM_DQInOut(SC_SRAM_DQ)
+	);
 
 	MEM_Stage_Reg memoryReg(
 		.clk(clk), .rst(rst),               .clr(1'b0), .en(SC_READY), 
-		.WB_ENIn(MEM_MEMR_WB_EN),           .WB_ENOut(MEMR_WB_WB_EN), 
-		.MEM_R_ENIn(MEM_MEMR_MEM_R_EN),     .MEM_R_ENOut(MEMR_WB_MEM_R_EN), 
-		.ALU_ResIn(MEM_MEMR_ALU),           .ALU_ResOut(MEMR_WB_ALU), 
-		.DataMemoryIn(MEM_MEMR_MemoryData), .DataMemoryOut(MEMR_WB_MemoryData), 
-		.DestIn(MEM_MEMR_Dest),             .DestOut(MEMR_WB_Dest)
+		.WB_ENIn(EXR_MEMR_WB_EN),           .WB_ENOut(MEMR_WB_WB_EN), 
+		.MEM_R_ENIn(EXR_MEMR_MEM_R_EN),     .MEM_R_ENOut(MEMR_WB_MEM_R_EN), 
+		.ALU_ResIn(EXR_MEMR_ALU),           .ALU_ResOut(MEMR_WB_ALU), 
+		.DataMemoryIn(SC_READ_DATA), .DataMemoryOut(MEMR_WB_MemoryData), 
+		.DestIn(EXR_MEMR_Dest),             .DestOut(MEMR_WB_Dest)
 	);
 
 	ForwardingUnit forward(
