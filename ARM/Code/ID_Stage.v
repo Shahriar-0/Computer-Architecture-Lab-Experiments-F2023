@@ -50,7 +50,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
 
     wire[8:0] controlUnitOut;
     ControlUnit controlUnit(
-        .opCodeIn(opCode), .SIn(s),       .modeIn(mode), 
+        .opCodeIn(opCode), .SIn(s), .modeIn(mode), 
         .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), 
         .BOut(controlUnitOut[5]),         .MEM_W_ENOut(controlUnitOut[6]), 
         .MEM_R_ENOut(controlUnitOut[7]),  .WB_ENOut(controlUnitOut[8])
@@ -79,7 +79,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
 
     wire[3:0] regInp2;
     Mux2to1 #(4) regInp2Mux(
-        .a(rm), .b(rd), .s(signals[6]), .out(regInp2) // FIXME: signals[6] => controlUnitOut[6]
+        .a(rm), .b(rd), .s(controlUnitOut[6]), .out(regInp2)        
     );
     assign regFileInp2Out = regInp2;
     assign src2Out = regInp2;
@@ -94,7 +94,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
         .readData1(Val_RnOut), .readData2(Val_RmOut)
     );
 
-    assign TwoSrcOut = ~i | signals[6]; // FIXME: signals[6] => controlUnitOut[6]
+    assign TwoSrcOut = ~i | controlUnitOut[6];
 
     assign PCOut = PCIn;
 
