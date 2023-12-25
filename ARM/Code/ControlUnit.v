@@ -31,8 +31,7 @@ module ControlUnit(modeIn, opCodeIn, SIn, EXE_CMDOut, SOut, BOut,
 
         case (modeIn)
             2'b00: begin
-                SOut = SIn;
-                // no write-back for CMP and TST
+                SOut = SIn; // no write-back for CMP and TST
                 WB_ENOut = (opCodeIn == 4'b1010 || opCodeIn == 4'b1000) ? 1'b0 : 1'b1;
             end
 

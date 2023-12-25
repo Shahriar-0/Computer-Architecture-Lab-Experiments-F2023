@@ -49,7 +49,7 @@ module EXE_Stage(clk, rst, WB_ENIn, MEM_R_ENIn, MEM_W_ENIn, EXE_CMDIn,
     assign WB_ENOut    = WB_ENIn;
     assign MEM_R_ENOut = MEM_R_ENIn;
     assign MEM_W_ENOut = MEM_W_ENIn;
-    assign Val_RmOut   = val2GeneratorIn; //FIXME :( fix name
+    assign Val_RmOut   = val2GeneratorIn; 
     assign DestOut     = DestIn;
     assign SOut        = SIn;
 
