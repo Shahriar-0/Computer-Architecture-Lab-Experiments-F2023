@@ -1,4 +1,7 @@
-module CPU(clk, rst, forwardENIn);
+module CPU(clk, rst, forwardENIn,
+			SC_SRAM_DQ, SC_SRAM_ADDR, SC_SRAM_UB_N, 
+			SC_SRAM_LB_N, SC_SRAM_WE_N, SC_SRAM_CE_N, 
+			SC_SRAM_OE_N, SC_READ_DATA);
 
     input clk, rst, forwardENIn;
 
@@ -58,10 +61,10 @@ module CPU(clk, rst, forwardENIn);
 	wire[1:0]
 		selSrc1, selSrc2;
 
-	wire[15:0] SC_SRAM_DQ;
-	wire[17:0] SC_SRAM_ADDR;
-	wire[0:0] SC_SRAM_UB_N, SC_SRAM_LB_N, SC_SRAM_WE_N, SC_SRAM_CE_N, SC_SRAM_OE_N;
-	wire[31:0] SC_READ_DATA;	
+	inout wire[15:0] SC_SRAM_DQ;
+	output wire[17:0] SC_SRAM_ADDR;
+	output wire[0:0]  SC_SRAM_UB_N, SC_SRAM_LB_N, SC_SRAM_WE_N, SC_SRAM_CE_N, SC_SRAM_OE_N;
+	output wire[31:0] SC_READ_DATA;	
 
 	IF_Stage instFetch(
 		.clk(clk), .rst(rst),    .freeze(HazardOut | ~SC_READY),
@@ -133,7 +136,7 @@ module CPU(clk, rst, forwardENIn);
 		.ALU_ResOut(EX_EXR_ALU),                 .Val_RmOut(EX_EXR_Val_Rm), 
 		.DestOut(EX_EXR_Dest),                   .statusOut(EX_STAT), 
 		.branchAddressOut(EX_IF_Branch_Address), .SOut(EX_STAT_EN),
-		.WB_ValueIn(WB_ID_WB_Value),  		     .ALU_ResIn(MEM_EX_ALU_Res),
+		.WB_ValueIn(WB_ID_WB_Value),  		     .ALU_ResIn(EXR_MEMR_ALU),
 		.selSrc1In(selSrc1),     				 .selSrc2In(selSrc2)
 	);
 
@@ -197,8 +200,8 @@ module CPU(clk, rst, forwardENIn);
 	ForwardingUnit forward(
 		.forwardEnIn(forwardENIn), 
 		.src1In(IDR_EX_src1), .src2In(IDR_EX_src2), 
-		.MEM_MEMR_WB_ENIn(MEM_MEMR_WB_EN), .WB_ID_WB_ENIn(WB_ID_WB_EN), 
-		.MEM_MEMR_DestIn(MEM_MEMR_Dest), .WB_ID_WB_DestIn(WB_ID_WB_Dest), 
+		.MEM_MEMR_WB_ENIn(EXR_MEMR_WB_EN), .WB_ID_WB_ENIn(WB_ID_WB_EN), 
+		.MEM_MEMR_DestIn(EXR_MEMR_Dest), .WB_ID_WB_DestIn(WB_ID_WB_Dest), 
 		.selSrc1Out(selSrc1), .selSrc2Out(selSrc2)
 	);
 
