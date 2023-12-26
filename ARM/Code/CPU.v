@@ -1,7 +1,7 @@
 module CPU(clk, rst, forwardENIn,
-			SC_SRAM_DQ, SC_SRAM_ADDR, SC_SRAM_UB_N, 
-			SC_SRAM_LB_N, SC_SRAM_WE_N, SC_SRAM_CE_N, 
-			SC_SRAM_OE_N, SC_READ_DATA);
+		   SC_SRAM_DQ, SC_SRAM_ADDR, SC_SRAM_UB_N, 
+		   SC_SRAM_LB_N, SC_SRAM_WE_N, SC_SRAM_CE_N, 
+		   SC_SRAM_OE_N, SC_READ_DATA);
 
     input clk, rst, forwardENIn;
 
@@ -79,7 +79,7 @@ module CPU(clk, rst, forwardENIn,
 	);
 
 	ID_Stage instDecode(
-		.clk(clk),                             .rst(rst),                  
+		.clk(clk), .rst(rst),                  .src2Out(ID_IDR_src2),
 		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(WB_ID_WB_EN),                 
 		.WB_DestIn(WB_ID_WB_Dest),             .WB_ValueIn(WB_ID_WB_Value),           
 		.HazardIn(HazardOut),      			   .PCIn(IFR_ID_PC),                      
@@ -91,8 +91,7 @@ module CPU(clk, rst, forwardENIn,
 		.WB_ENOut(ID_IDR_WB_EN),               .DestOut(ID_IDR_Dest),         
 		.IOut(ID_IDR_I),                       .regFileInp2Out(ID_HZ_RegSrc2),
 		.RnOut(ID_HZ_Rn),					   .Imm24Out(ID_IDR_Imm24),
-		.src1Out(ID_IDR_src1), 				   .src2Out(ID_IDR_src2),
-		.shiftOperandOut(ID_IDR_ShiftOperand)
+		.src1Out(ID_IDR_src1), 				   .shiftOperandOut(ID_IDR_ShiftOperand)
 	);
 
 	HazardUnit hazardUnit(
@@ -167,19 +166,18 @@ module CPU(clk, rst, forwardENIn,
 
 	SramController sramcontroller(
     	.clk(clk), .rst(rst),
-    	.wrEnIn(EXR_MEM_MEM_W_EN), .rdEnIn(EXR_MEMR_MEM_R_EN),
-    	.addressIn(EXR_MEMR_ALU),
-    	.writeDataIn(EXR_MEM_Val_Rm),
-    	.readDataOut(SC_READ_DATA),
-    	.readyOut(SC_READY),            // to freeze other stages
-
-    	.SRAM_DQInOut(SC_SRAM_DQ),        // SRAM Data bus 16 bits
-    	.SRAM_ADDROut(SC_SRAM_ADDR), // SRAM Address bus 18 bits
-    	.SRAM_UB_NOut(SC_SRAM_UB_N),            // SRAM High-byte data mask
-    	.SRAM_LB_NOut(SC_SRAM_LB_N),            // SRAM Low-byte data mask
-    	.SRAM_WE_NOut(SC_SRAM_WE_N),        // SRAM Write enable
-    	.SRAM_CE_NOut(SC_SRAM_CE_N),            // SRAM Chip enable
-    	.SRAM_OE_NOut(SC_SRAM_OE_N)             // SRAM Output enable
+    	.wrEnIn(EXR_MEM_MEM_W_EN),  .rdEnIn(EXR_MEMR_MEM_R_EN),
+    	.addressIn(EXR_MEMR_ALU),   .writeDataIn(EXR_MEM_Val_Rm),
+    	.readDataOut(SC_READ_DATA), 
+		
+		.readyOut(SC_READY),            // to freeze other stages
+    	.SRAM_DQInOut(SC_SRAM_DQ),      // SRAM Data bus 16 bits
+    	.SRAM_ADDROut(SC_SRAM_ADDR), 	// SRAM Address bus 18 bits
+    	.SRAM_UB_NOut(SC_SRAM_UB_N),    // SRAM High-byte data mask
+    	.SRAM_LB_NOut(SC_SRAM_LB_N),    // SRAM Low-byte data mask
+    	.SRAM_WE_NOut(SC_SRAM_WE_N),    // SRAM Write enable
+    	.SRAM_CE_NOut(SC_SRAM_CE_N),    // SRAM Chip enable
+    	.SRAM_OE_NOut(SC_SRAM_OE_N)     // SRAM Output enable
 	);
 
 	SRAM sram(
@@ -193,16 +191,16 @@ module CPU(clk, rst, forwardENIn,
 		.WB_ENIn(EXR_MEMR_WB_EN),           .WB_ENOut(MEMR_WB_WB_EN), 
 		.MEM_R_ENIn(EXR_MEMR_MEM_R_EN),     .MEM_R_ENOut(MEMR_WB_MEM_R_EN), 
 		.ALU_ResIn(EXR_MEMR_ALU),           .ALU_ResOut(MEMR_WB_ALU), 
-		.DataMemoryIn(SC_READ_DATA), .DataMemoryOut(MEMR_WB_MemoryData), 
+		.DataMemoryIn(SC_READ_DATA), 	    .DataMemoryOut(MEMR_WB_MemoryData), 
 		.DestIn(EXR_MEMR_Dest),             .DestOut(MEMR_WB_Dest)
 	);
 
 	ForwardingUnit forward(
 		.forwardEnIn(forwardENIn), 
-		.src1In(IDR_EX_src1), .src2In(IDR_EX_src2), 
+		.src1In(IDR_EX_src1), 			   .src2In(IDR_EX_src2), 
 		.MEM_MEMR_WB_ENIn(EXR_MEMR_WB_EN), .WB_ID_WB_ENIn(WB_ID_WB_EN), 
-		.MEM_MEMR_DestIn(EXR_MEMR_Dest), .WB_ID_WB_DestIn(WB_ID_WB_Dest), 
-		.selSrc1Out(selSrc1), .selSrc2Out(selSrc2)
+		.MEM_MEMR_DestIn(EXR_MEMR_Dest),   .WB_ID_WB_DestIn(WB_ID_WB_Dest), 
+		.selSrc1Out(selSrc1), 		       .selSrc2Out(selSrc2)
 	);
 
 	WB_Stage writeBack(
