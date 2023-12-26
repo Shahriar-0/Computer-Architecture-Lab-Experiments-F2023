@@ -52,8 +52,8 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
     ControlUnit controlUnit(
         .opCodeIn(opCode), .SIn(s), .modeIn(mode), 
         .EXE_CMDOut(controlUnitOut[3:0]), .SOut(controlUnitOut[4]), 
-        .BOut(controlUnitOut[5]), .MEM_W_ENOut(controlUnitOut[6]), 
-        .MEM_R_ENOut(controlUnitOut[7]), .WB_ENOut(controlUnitOut[8])
+        .BOut(controlUnitOut[5]),         .MEM_W_ENOut(controlUnitOut[6]), 
+        .MEM_R_ENOut(controlUnitOut[7]),  .WB_ENOut(controlUnitOut[8])
     );
 
     wire[0:0] conditionCheckOut;
@@ -72,7 +72,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
     assign EXE_CMDOut = signals[3:0];
     assign SOut = signals[4];
     assign BOut = signals[5];
-    assign MEM_W_ENOut = signals[6];
+    assign MEM_W_ENOut = signals[6]; 
     assign MEM_R_ENOut = signals[7];
     assign WB_ENOut = signals[8];
 

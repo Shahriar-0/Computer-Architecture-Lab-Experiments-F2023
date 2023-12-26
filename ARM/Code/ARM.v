@@ -302,6 +302,11 @@ input          TD_CLK27;            //	TV Decoder 27MHz CLK
 inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 	
-	CPU cpu(.clk(CLOCK_50), .rst(SW[0]), .forwardENIn(SW[1]));
+	CPU cpu(
+		.clk(CLOCK_50), .rst(SW[0]), .forwardENIn(SW[1]), 
+		.SC_SRAM_DQ(SRAM_DQ), .SC_SRAM_ADDR(SRAM_ADDR), .SC_SRAM_UB_N(SRAM_UB_N), 
+		.SC_SRAM_LB_N(SRAM_LB_N), .SC_SRAM_WE_N(SRAM_WE_N), .SC_SRAM_CE_N(SRAM_CE_N), 
+		.SC_SRAM_OE_N(SRAM_OE_N), .SC_READ_DATA(READ_DATA)
+	);
 	
 endmodule

@@ -94,7 +94,7 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
                 //     SRAM_ADDROut = sramUpLowAddess;
                 //     readDataOut[47:32] <= SRAM_DQInOut;
                 // end
-                `DONE: readyOut = 1'b1;
+                // readyOut = 1'b1;
             end
 
             `DATA_UP_HIGH: begin
@@ -103,7 +103,7 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
                 //     SRAM_ADDROut = sramUpHighAddess;
                 //     readDataOut[63:48] <= SRAM_DQInOut;
                 // end
-                `DONE: readyOut = 1'b1;
+                // readyOut = 1'b1;
             end
             
             `DONE: readyOut = 1'b1;
