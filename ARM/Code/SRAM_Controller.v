@@ -14,8 +14,8 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
     input [31:0] addressIn;
     input [31:0] writeDataIn;
     output reg [31:0] readDataOut;
-    output reg readyOut;            // to freeze other stages
 
+    output reg readyOut;            // to freeze other stages
     inout [15:0] SRAM_DQInOut;      // SRAM Data bus 16 bits
     output reg [17:0] SRAM_ADDROut; // SRAM Address bus 18 bits
     output SRAM_UB_NOut;            // SRAM High-byte data mask
@@ -29,12 +29,12 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
     wire [31:0] memAddr;
     assign memAddr = addressIn - 32'd1024;
 
-    wire [17:0] sramLowAddr, sramHighAddr; //, sramUpLowAddess, sramUpHighAddess;
-    // assign sramLowAddr = {memAddr[18:3], 2'd0};
-    assign sramLowAddr = {memAddr[18:2], 1'b0};
+    wire [17:0] sramLowAddr, sramHighAddr, sramUpLowAddess, sramUpHighAddess;
+    assign sramLowAddr = {memAddr[18:3], 2'd0};
+    // assign sramLowAddr = {memAddr[18:2], 1'b0};
     assign sramHighAddr = sramLowAddr + 18'd1;
-    // assign sramUpLowAddess = sramLowAddr + 18'd2;
-    // assign sramUpHighAddess = sramLowAddr + 18'd3;
+    assign sramUpLowAddess = sramLowAddr + 18'd2;
+    assign sramUpHighAddess = sramLowAddr + 18'd3;
 
     wire [17:0] sramLowAddrWrite, sramHighAddrWrite;
     assign sramLowAddrWrite = {memAddr[18:2], 1'b0};
@@ -89,21 +89,19 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
             end
 
             `DATA_UP_LOW: begin
-                // SRAM_WE_NOut = 1'b1;
-                // if (rdEnIn) begin
-                //     SRAM_ADDROut = sramUpLowAddess;
-                //     readDataOut[47:32] <= SRAM_DQInOut;
-                // end
-                // readyOut = 1'b1;
+                SRAM_WE_NOut = 1'b1;
+                if (rdEnIn) begin
+                    SRAM_ADDROut = sramUpLowAddess;
+                    readDataOut[47:32] <= SRAM_DQInOut;
+                end
             end
 
             `DATA_UP_HIGH: begin
-                // SRAM_WE_NOut = 1'b1;
-                // if (rdEnIn) begin
-                //     SRAM_ADDROut = sramUpHighAddess;
-                //     readDataOut[63:48] <= SRAM_DQInOut;
-                // end
-                // readyOut = 1'b1;
+                SRAM_WE_NOut = 1'b1;
+                if (rdEnIn) begin
+                    SRAM_ADDROut = sramUpHighAddess;
+                    readDataOut[63:48] <= SRAM_DQInOut;
+                end
             end
             
             `DONE: readyOut = 1'b1;
