@@ -56,7 +56,7 @@ module CPU(clk, rst, forwardENIn,
 		EXR_MEMR_WB_EN, EXR_MEMR_MEM_R_EN, EXR_MEM_MEM_W_EN,
 		MEM_MEMR_WB_EN,
 		MEMR_WB_WB_EN, MEMR_WB_MEM_R_EN,
-		SC_READY; 
+		MEM_READY; 
 
 	wire[1:0]
 		selSrc1, selSrc2;
@@ -67,31 +67,31 @@ module CPU(clk, rst, forwardENIn,
 	output wire[31:0] SC_READ_DATA;	
 
 	IF_Stage instFetch(
-		.clk(clk), .rst(rst),    .freeze(HazardOut | ~SC_READY),
-		.PCOut(IF_IFR_PC),       .instructionOut(IF_IFR_Instruction),  
+		.clk(clk), .rst(rst),                   .freeze(HazardOut | ~MEM_READY),
+		.PCOut(IF_IFR_PC),                      .instructionOut(IF_IFR_Instruction),  
 		.branchAddressIn(EX_IF_Branch_Address), .branchTakenIn(BranchTaken)
 	); 
 
 	IF_Stage_Reg instFetchReg(
-		.clk(clk), .rst(rst),         .en(~HazardOut & SC_READY), .clr(BranchTaken), 
+		.clk(clk), .rst(rst),         .en(~HazardOut & MEM_READY), .clr(BranchTaken), 
 		.instrIn(IF_IFR_Instruction), .instrOut(IFR_ID_Instruction), 
 		.PCIn(IF_IFR_PC),             .PCOut(IFR_ID_PC)
 	);
 
 	ID_Stage instDecode(
-		.clk(clk), .rst(rst),                  .src2Out(ID_IDR_src2),
-		.instructionIn(IFR_ID_Instruction),    .WB_ENIn(WB_ID_WB_EN),                 
-		.WB_DestIn(WB_ID_WB_Dest),             .WB_ValueIn(WB_ID_WB_Value),           
-		.HazardIn(HazardOut),      			   .PCIn(IFR_ID_PC),                      
-		.statusIn(STAT_Out),                   .PCOut(ID_IDR_PC),                     
-		.Val_RnOut(ID_IDR_Val_Rn),             .Val_RmOut(ID_IDR_Val_Rm),             
-		.TwoSrcOut(ID_HZ_TwoSrc),              .SOut(ID_IDR_S),               
-		.BOut(ID_IDR_B),                       .EXE_CMDOut(ID_IDR_EXE_CMD), 
-		.MEM_W_ENOut(ID_IDR_MEM_W_EN),         .MEM_R_ENOut(ID_IDR_MEM_R_EN),      
-		.WB_ENOut(ID_IDR_WB_EN),               .DestOut(ID_IDR_Dest),         
-		.IOut(ID_IDR_I),                       .regFileInp2Out(ID_HZ_RegSrc2),
-		.RnOut(ID_HZ_Rn),					   .Imm24Out(ID_IDR_Imm24),
-		.src1Out(ID_IDR_src1), 				   .shiftOperandOut(ID_IDR_ShiftOperand)
+		.clk(clk), .rst(rst),               .src2Out(ID_IDR_src2),
+		.instructionIn(IFR_ID_Instruction), .WB_ENIn(WB_ID_WB_EN),                 
+		.WB_DestIn(WB_ID_WB_Dest),          .WB_ValueIn(WB_ID_WB_Value),           
+		.HazardIn(HazardOut),      		    .PCIn(IFR_ID_PC),                      
+		.statusIn(STAT_Out),                .PCOut(ID_IDR_PC),                     
+		.Val_RnOut(ID_IDR_Val_Rn),          .Val_RmOut(ID_IDR_Val_Rm),             
+		.TwoSrcOut(ID_HZ_TwoSrc),           .SOut(ID_IDR_S),               
+		.BOut(ID_IDR_B),                    .EXE_CMDOut(ID_IDR_EXE_CMD), 
+		.MEM_W_ENOut(ID_IDR_MEM_W_EN),      .MEM_R_ENOut(ID_IDR_MEM_R_EN),      
+		.WB_ENOut(ID_IDR_WB_EN),            .DestOut(ID_IDR_Dest),         
+		.IOut(ID_IDR_I),                    .regFileInp2Out(ID_HZ_RegSrc2),
+		.RnOut(ID_HZ_Rn),				    .Imm24Out(ID_IDR_Imm24),
+		.src1Out(ID_IDR_src1), 			    .shiftOperandOut(ID_IDR_ShiftOperand)
 	);
 
 	HazardUnit hazardUnit(
@@ -103,7 +103,7 @@ module CPU(clk, rst, forwardENIn,
 	);
 
 	ID_Stage_Reg instDecodeReg(
-		.clk(clk), .rst(rst),                 .en(SC_READY), .clr(BranchTaken),
+		.clk(clk), .rst(rst),                 .en(MEM_READY), .clr(BranchTaken),
 		.PCIn(ID_IDR_PC), 			          .PCOut(IDR_EX_PC),
 		.WB_ENIn(ID_IDR_WB_EN), 	          .WB_ENOut(IDR_EX_WB_EN), 
 		.MEM_R_ENIn(ID_IDR_MEM_R_EN),         .MEM_R_ENOut(IDR_EX_MEM_R_EN), 
@@ -140,7 +140,7 @@ module CPU(clk, rst, forwardENIn,
 	);
 
 	EXE_Stage_Reg executeReg(
-		.clk(clk), .rst(rst),         .en(SC_READY), .clr(1'b0), 
+		.clk(clk), .rst(rst),         .en(MEM_READY), .clr(1'b0), 
 		.WB_ENIn(EX_EXR_WB_EN),       .WB_ENOut(EXR_MEMR_WB_EN), 
 		.MEM_R_ENIn(EX_EXR_MEM_R_EN), .MEM_R_ENOut(EXR_MEMR_MEM_R_EN), 
 		.MEM_W_ENIn(EX_EXR_MEM_W_EN), .MEM_W_ENOut(EXR_MEM_MEM_W_EN), 
@@ -170,7 +170,7 @@ module CPU(clk, rst, forwardENIn,
 
 	CacheController cachecontroller(
 		.clk(clk), .rst(rst), .rdEnIn(EXR_MEMR_MEM_R_EN), .wrEnIn(EXR_MEM_MEM_W_EN), .adrIn(EXR_MEMR_ALU), .wDataIn(EXR_MEM_Val_Rm), 
-		.rDataOut(SC_READ_DATA), .readyOut(SC_READY), .sramReadyIn(sram_cache_ready), .sramReadDataIn(sram_cache_data), 
+		.rDataOut(SC_READ_DATA), .readyOut(MEM_READY), .sramReadyIn(sram_cache_ready), .sramReadDataIn(sram_cache_data), 
 		.sramWrEnOut(cache_sram_w_en), .sramRdEnOut(cache_sram_r_en));
 
 	// SramController sramcontroller(
@@ -216,7 +216,7 @@ module CPU(clk, rst, forwardENIn,
 	);
 
 	MEM_Stage_Reg memoryReg(
-		.clk(clk), .rst(rst),               .clr(1'b0), .en(SC_READY), 
+		.clk(clk), .rst(rst),               .clr(1'b0), .en(MEM_READY), 
 		.WB_ENIn(EXR_MEMR_WB_EN),           .WB_ENOut(MEMR_WB_WB_EN), 
 		.MEM_R_ENIn(EXR_MEMR_MEM_R_EN),     .MEM_R_ENOut(MEMR_WB_MEM_R_EN), 
 		.ALU_ResIn(EXR_MEMR_ALU),           .ALU_ResOut(MEMR_WB_ALU), 
