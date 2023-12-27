@@ -164,26 +164,55 @@ module CPU(clk, rst, forwardENIn,
 	// 	.MEM_EX_ALU_ResOut(MEM_EX_ALU_Res)
 	// );
 
+	wire[31:0] cache_sram_rDataOut;
+	wire [0:0] sram_cache_ready, cache_sram_w_en, cache_sram_r_en;
+	wire[63:0] sram_cache_data;
+
+	CacheController cachecontroller(
+		.clk(clk), .rst(rst), .rdEnIn(EXR_MEMR_MEM_R_EN), .wrEnIn(EXR_MEM_MEM_W_EN), .adrIn(EXR_MEMR_ALU), .wDataIn(EXR_MEM_Val_Rm), 
+		.rDataOut(SC_READ_DATA), .readyOut(SC_READY), .sramReadyIn(sram_cache_ready), .sramReadDataIn(sram_cache_data), 
+		.sramWrEnOut(cache_sram_w_en), .sramRdEnOut(cache_sram_r_en));
+
+	// SramController sramcontroller(
+    // 	.clk(clk), .rst(rst),
+    // 	.wrEnIn(cache_sram_w_en),  .rdEnIn(cache_sram_r_en),
+    // 	.addressIn(EXR_MEMR_ALU),   .writeDataIn(EXR_MEM_Val_Rm),
+    // 	.readDataOut(sram_cache_data), 
+		
+	// 	.readyOut(sram_cache_ready),            // to freeze other stages
+    // 	.SRAM_DQInOut(SC_SRAM_DQ),      // SRAM Data bus 16 bits
+    // 	.SRAM_ADDROut(SC_SRAM_ADDR), 	// SRAM Address bus 18 bits
+    // 	.SRAM_UB_NOut(SC_SRAM_UB_N),    // SRAM High-byte data mask
+    // 	.SRAM_LB_NOut(SC_SRAM_LB_N),    // SRAM Low-byte data mask
+    // 	.SRAM_WE_NOut(SC_SRAM_WE_N),    // SRAM Write enable
+    // 	.SRAM_CE_NOut(SC_SRAM_CE_N),    // SRAM Chip enable
+    // 	.SRAM_OE_NOut(SC_SRAM_OE_N)     // SRAM Output enable
+	// );
+
+	wire[0:0] SC_SRAM_WE_;
+	wire[17:0] SC_SRAM_ADD;
+	wire[15:0] SC_SRAM_D;
+
 	SramController sramcontroller(
     	.clk(clk), .rst(rst),
-    	.wrEnIn(EXR_MEM_MEM_W_EN),  .rdEnIn(EXR_MEMR_MEM_R_EN),
+    	.wrEnIn(cache_sram_w_en),  .rdEnIn(cache_sram_r_en),
     	.addressIn(EXR_MEMR_ALU),   .writeDataIn(EXR_MEM_Val_Rm),
-    	.readDataOut(SC_READ_DATA), 
+    	.readDataOut(sram_cache_data), 
 		
-		.readyOut(SC_READY),            // to freeze other stages
-    	.SRAM_DQInOut(SC_SRAM_DQ),      // SRAM Data bus 16 bits
-    	.SRAM_ADDROut(SC_SRAM_ADDR), 	// SRAM Address bus 18 bits
+		.readyOut(sram_cache_ready),            // to freeze other stages
+    	.SRAM_DQInOut(SC_SRAM_D),      // SRAM Data bus 16 bits
+    	.SRAM_ADDROut(SC_SRAM_ADD), 	// SRAM Address bus 18 bits
     	.SRAM_UB_NOut(SC_SRAM_UB_N),    // SRAM High-byte data mask
     	.SRAM_LB_NOut(SC_SRAM_LB_N),    // SRAM Low-byte data mask
-    	.SRAM_WE_NOut(SC_SRAM_WE_N),    // SRAM Write enable
+    	.SRAM_WE_NOut(SC_SRAM_WE_),    // SRAM Write enable
     	.SRAM_CE_NOut(SC_SRAM_CE_N),    // SRAM Chip enable
     	.SRAM_OE_NOut(SC_SRAM_OE_N)     // SRAM Output enable
 	);
 
 	SRAM sram(
 		.clk(clk), .rst(rst), 
-		.SRAM_WE_NIn(SC_SRAM_WE_N), .SRAM_ADDRIn(SC_SRAM_ADDR), 
-		.SRAM_DQInOut(SC_SRAM_DQ)
+		.SRAM_WE_NIn(SC_SRAM_WE_), .SRAM_ADDRIn(SC_SRAM_ADD), 
+		.SRAM_DQInOut(SC_SRAM_D)
 	);
 
 	MEM_Stage_Reg memoryReg(

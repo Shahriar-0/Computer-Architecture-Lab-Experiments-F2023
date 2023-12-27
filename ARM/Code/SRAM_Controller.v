@@ -13,7 +13,7 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
     input wrEnIn, rdEnIn;
     input [31:0] addressIn;
     input [31:0] writeDataIn;
-    output reg [31:0] readDataOut;
+    output reg [63:0] readDataOut;
 
     output reg readyOut;            // to freeze other stages
     inout [15:0] SRAM_DQInOut;      // SRAM Data bus 16 bits

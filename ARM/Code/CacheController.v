@@ -61,7 +61,7 @@ module CacheController(clk, rst, rdEnIn, wrEnIn, adrIn, wDataIn,
     wire [31:0] readDataQ;
 
     assign data = hitWay0 ? dataWay0 :
-                  hitWay1 ? dataWay1 : 32'dz;
+                  hitWay1 ? dataWay1 : 32'bz;
     
     assign readDataQ = hit         ? data :
                        sramReadyIn ? (offset[2] == 1'b0 ? sramReadDataIn[31:0]   : 
