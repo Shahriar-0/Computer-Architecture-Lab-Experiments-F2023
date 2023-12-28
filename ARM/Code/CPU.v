@@ -4,10 +4,10 @@ module CPU(clk, rst, forwardENIn,
 		   MEM_SRAM_OE_N);
 
     input clk, rst, forwardENIn;
-	inout  wire[15:0] MEM_SRAM_DQ;
+	inout wire[15:0] MEM_SRAM_DQ;
 	output wire[17:0] MEM_SRAM_ADDR;
-	output wire[0:0]  MEM_SRAM_UB_N, MEM_SRAM_LB_N, MEM_SRAM_WE_N, MEM_SRAM_CE_N, MEM_SRAM_OE_N;
-
+	output wire[0:0]  MEM_SRAM_UB_N, MEM_SRAM_LB_N, MEM_SRAM_WE_N, 
+					  MEM_SRAM_CE_N, MEM_SRAM_OE_N;
 
     wire[31:0] 
 		// IF IFR
@@ -75,7 +75,6 @@ module CPU(clk, rst, forwardENIn,
 	);
 
 
-	wire[0:0] ID_TwoSrc;
 	ID_Stage instDecode(
 		.clk(clk), .rst(rst),               
 		.instructionIn(IFR_Instr),   .WB_ENIn(WB_WriteBackEn),                 
@@ -116,6 +115,7 @@ module CPU(clk, rst, forwardENIn,
 		.Imm24In(ID_Imm24),               .Imm24Out(IDR_Imm24), 
 		.DestIn(ID_Dest),                 .DestOut(IDR_Dest), 
 		.statusIn(STAT_Out),              .statusOut(IDR_Status),
+		.statusIn(STAT_Out),              .statusOut(IDR_Status),
 		.src1In(ID_Src1),   		      .src1Out(IDR_Src1),
 		.src2In(ID_Src2),   		      .src2Out(IDR_Src2)
 	);
@@ -154,6 +154,7 @@ module CPU(clk, rst, forwardENIn,
 	MEM_Stage memoryStage(
 		.clk(clk), .rst(rst),         .ALU_ResIn(EXR_Alu), 
 		.MEM_W_ENIn(EXR_MemWriteEN),  .MEM_R_ENIn(EXR_MemReadEn), 
+		.MEM_W_ENIn(EXR_MemWriteEN),  .MEM_R_ENIn(EXR_MemReadEn), 
 		.Value_RmIn(EXR_ValRm),       .DataMemoryOut(MEM_DataMemory), 
 		.MEM_ReadyOut(MEM_Ready),     .SRAM_DQInOut(MEM_SRAM_DQ), 
 		.SRAM_ADDROut(MEM_SRAM_ADDR), .SRAM_UB_NOut(MEM_SRAM_UB_N), 
@@ -166,6 +167,8 @@ module CPU(clk, rst, forwardENIn,
 		.clk(clk), .rst(rst),          .clr(1'b0), .en(MEM_Ready), 
 		.WB_ENIn(EXR_WriteBackEn),     .WB_ENOut(MEMR_WriteBackEn), 
 		.MEM_R_ENIn(EXR_MemReadEn),    .MEM_R_ENOut(MEMR_MemReadEn), 
+		.WB_ENIn(EXR_WriteBackEn),     .WB_ENOut(MEMR_WriteBackEn), 
+		.MEM_R_ENIn(EXR_MemReadEn),    .MEM_R_ENOut(MEMR_MemReadEn), 
 		.ALU_ResIn(EXR_Alu),           .ALU_ResOut(MEMR_Alu), 
 		.DataMemoryIn(MEM_DataMemory), .DataMemoryOut(MEMR_DataMemory), 
 		.DestIn(EXR_Dest),             .DestOut(MEMR_Dest)
@@ -173,6 +176,11 @@ module CPU(clk, rst, forwardENIn,
 
 
 	ForwardingUnit forward(
+		.forwardEnIn(forwardENIn), 
+		.src1In(IDR_Src1), 			   	     .src2In(IDR_Src2), 
+		.MEM_MEMR_WB_ENIn(EXR_WriteBackEn),  .WB_ID_WB_ENIn(WB_WriteBackEn), 
+		.MEM_MEMR_DestIn(EXR_Dest),   		 .WB_ID_WB_DestIn(WB_Dest), 
+		.selSrc1Out(FW_SelSrc1), 		     .selSrc2Out(FW_SelSrc2)
 		.forwardEnIn(forwardENIn),      .src1In(IDR_Src1), 			        
 		.src2In(IDR_Src2),              .MEM_MEMR_WB_ENIn(EXR_WriteBackEn), 
 		.WB_ID_WB_ENIn(WB_WriteBackEn), .MEM_MEMR_DestIn(EXR_Dest),         

@@ -46,4 +46,5 @@ module ControlUnit(modeIn, opCodeIn, SIn, EXE_CMDOut, SOut, BOut,
             
         endcase
     end
+    
 endmodule

@@ -27,4 +27,5 @@ module ConditionCheck(condIn, condOut, statusIn);
             default: condOut = 1'bx;
         endcase
     end
+    
 endmodule
