@@ -1,18 +1,18 @@
 
 module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn, 
-                HazardIn, PCIn, statusIn, PCOut, Val_RnOut, Val_RmOut, 
+                HazardIn, statusIn, Val_RnOut, Val_RmOut, 
                 TwoSrcOut, SOut, BOut, EXE_CMDOut, MEM_W_ENOut, MEM_R_ENOut,
-                DestOut, IOut, regFileInp2Out, RnOut, shiftOperandOut, 
+                DestOut, IOut, shiftOperandOut, 
                 WB_ENOut, Imm24Out, src1Out, src2Out);
 
     parameter N = 32;
     
     input wire[0:0] clk, rst, WB_ENIn, HazardIn;
     input wire[3:0] WB_DestIn, statusIn;
-    input wire[N - 1:0] PCIn, instructionIn, WB_ValueIn;
-    output wire[N - 1:0] PCOut, Val_RnOut, Val_RmOut;
+    input wire[N - 1:0] instructionIn, WB_ValueIn;
+    output wire[N - 1:0] Val_RnOut, Val_RmOut;
     output wire[0:0] TwoSrcOut, SOut, BOut, MEM_W_ENOut, MEM_R_ENOut, WB_ENOut, IOut;
-    output wire[3:0] EXE_CMDOut, DestOut, regFileInp2Out, RnOut, src1Out, src2Out;
+    output wire[3:0] EXE_CMDOut, DestOut, src1Out, src2Out;
     output wire[11:0] shiftOperandOut;
     output wire[23:0] Imm24Out;
 
@@ -27,8 +27,7 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
 
     wire[3:0] rn;
     assign rn = instructionIn[19:16];
-    assign RnOut = rn;
-    assign src1Out = RnOut;
+    assign src1Out = rn;
 
     wire[3:0] rd;
     assign rd = instructionIn[15:12];
@@ -81,7 +80,6 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
     Mux2to1 #(4) regInp2Mux(
         .a(rm), .b(rd), .s(controlUnitOut[6]), .out(regInp2)        
     );
-    assign regFileInp2Out = regInp2;
     assign src2Out = regInp2;
 
     wire [0:0] notBranch;
@@ -95,7 +93,5 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
     );
 
     assign TwoSrcOut = ~i | controlUnitOut[6];
-
-    assign PCOut = PCIn;
 
 endmodule
