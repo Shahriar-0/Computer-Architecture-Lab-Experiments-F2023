@@ -26,28 +26,6 @@ module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, Value_RmIn,
 		.sramWrEnOut(cache_sram_w_en),  .sramRdEnOut(cache_sram_r_en)
     );
 
-	// SramController sramcontroller(
-    // 	.clk(clk),                    .rst(rst),
-    //     .wrEnIn(cache_sram_w_en),     .rdEnIn(cache_sram_r_en),
-    // 	.addressIn(ALU_ResIn),        .writeDataIn(Value_RmIn),
-    // 	.readDataOut(sram_cache_data), 
-		
-	// 	.readyOut(sram_cache_ready),    // to freeze other stages
-    // 	.SRAM_DQInOut(SRAM_DQInOut),    // SRAM Data bus 16 bits
-    // 	.SRAM_ADDROut(SRAM_ADDROut), 	// SRAM Address bus 18 bits
-    // 	.SRAM_UB_NOut(SRAM_UB_NOut),    // SRAM High-byte data mask
-    // 	.SRAM_LB_NOut(SRAM_LB_NOut),    // SRAM Low-byte data mask
-    // 	.SRAM_WE_NOut(SRAM_WE_NOut),    // SRAM Write enable
-    // 	.SRAM_CE_NOut(SRAM_CE_NOut),    // SRAM Chip enable
-    // 	.SRAM_OE_NOut(SRAM_OE_NOut)     // SRAM Output enable
-	// );
-
-
-	/*------------------------------------- for testing -------------------------------------*/
-
-	wire[0:0] SC_SRAM_WE_;
-	wire[17:0] SC_SRAM_ADD;
-	wire[15:0] SC_SRAM_D;
 	SramController sramcontroller(
     	.clk(clk),                    .rst(rst),
         .wrEnIn(cache_sram_w_en),     .rdEnIn(cache_sram_r_en),
@@ -55,19 +33,43 @@ module MEM_Stage(clk, rst, ALU_ResIn, MEM_W_ENIn, MEM_R_ENIn, Value_RmIn,
     	.readDataOut(sram_cache_data), 
 		
 		.readyOut(sram_cache_ready),    // to freeze other stages
-    	.SRAM_DQInOut(SC_SRAM_D),    // SRAM Data bus 16 bits
-    	.SRAM_ADDROut(SC_SRAM_ADD), 	// SRAM Address bus 18 bits
+    	.SRAM_DQInOut(SRAM_DQInOut),    // SRAM Data bus 16 bits
+    	.SRAM_ADDROut(SRAM_ADDROut), 	// SRAM Address bus 18 bits
     	.SRAM_UB_NOut(SRAM_UB_NOut),    // SRAM High-byte data mask
     	.SRAM_LB_NOut(SRAM_LB_NOut),    // SRAM Low-byte data mask
-    	.SRAM_WE_NOut(SC_SRAM_WE_),    // SRAM Write enable
+    	.SRAM_WE_NOut(SRAM_WE_NOut),    // SRAM Write enable
     	.SRAM_CE_NOut(SRAM_CE_NOut),    // SRAM Chip enable
     	.SRAM_OE_NOut(SRAM_OE_NOut)     // SRAM Output enable
 	);
 
-	SRAM sram(
-		.clk(clk), .rst(rst), 
-		.SRAM_WE_NIn(SC_SRAM_WE_), .SRAM_ADDRIn(SC_SRAM_ADD), 
-		.SRAM_DQInOut(SC_SRAM_D)
-	);
+
+	/*------------------------------------- testing mode -------------------------------------*/
+
+	// wire[0:0] SC_SRAM_WE_;
+	// wire[17:0] SC_SRAM_ADD;
+	// wire[15:0] SC_SRAM_D;
+	// SramController sramcontroller(
+    // 	.clk(clk),                    .rst(rst),
+    //     .wrEnIn(cache_sram_w_en),     .rdEnIn(cache_sram_r_en),
+    // 	.addressIn(ALU_ResIn),        .writeDataIn(Value_RmIn),
+    // 	.readDataOut(sram_cache_data), 
+		
+	// 	.readyOut(sram_cache_ready),    // to freeze other stages
+    // 	.SRAM_DQInOut(SC_SRAM_D),    // SRAM Data bus 16 bits
+    // 	.SRAM_ADDROut(SC_SRAM_ADD), 	// SRAM Address bus 18 bits
+    // 	.SRAM_UB_NOut(SRAM_UB_NOut),    // SRAM High-byte data mask
+    // 	.SRAM_LB_NOut(SRAM_LB_NOut),    // SRAM Low-byte data mask
+    // 	.SRAM_WE_NOut(SC_SRAM_WE_),    // SRAM Write enable
+    // 	.SRAM_CE_NOut(SRAM_CE_NOut),    // SRAM Chip enable
+    // 	.SRAM_OE_NOut(SRAM_OE_NOut)     // SRAM Output enable
+	// );
+
+	// SRAM sram(
+	// 	.clk(clk), .rst(rst), 
+	// 	.SRAM_WE_NIn(SC_SRAM_WE_), .SRAM_ADDRIn(SC_SRAM_ADD), 
+	// 	.SRAM_DQInOut(SC_SRAM_D)
+	// );
+
+	/*------------------------------------- testing mode -------------------------------------*/
 
 endmodule
