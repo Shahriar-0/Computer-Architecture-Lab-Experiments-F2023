@@ -77,46 +77,52 @@ module CacheController(clk, rst, rdEnIn, wrEnIn, adrIn, wDataIn,
     // -----------------------------------------------------
 
     always @(posedge clk) begin
-        if (wrEnIn) begin
-            if (hitWay0) begin
-                indexLRU[index] = 1'b1;
-                way0Valid[index] = 1'b0;
-            end
-            else if (hitWay1) begin
-                indexLRU[index] = 1'b0;
-                way1Valid[index] = 1'b0;
-            end
-        end
+        
     end
 
     always @(posedge clk) begin
-        if (rdEnIn) begin
-            if (hit) 
-                indexLRU[index] = hitWay1;
-            else begin
-                if (sramReadyIn) begin
-                    if (indexLRU[index] == 1'b1) begin
-                        indexLRU[index] = 1'b0;
-                        {way0S[index], way0F[index]} = sramReadDataIn;
-                        way0Valid[index] = 1'b1;
-                        way0Tag[index] = tag;
-                    end
-                    else begin
-                        indexLRU[index] = 1'b1;
-                        {way1S[index], way1F[index]} = sramReadDataIn;
-                        way1Valid[index] = 1'b1;
-                        way1Tag[index] = tag;
-                    end
-                end
-            end
-        end
+        
     end
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            way0Valid = 64'd0;
-            way1Valid = 64'd0;
-            indexLRU = 64'd0;
+            way0Valid <= 64'd0;
+            way1Valid <= 64'd0;
+            indexLRU <= 64'd0;
+        end
+
+        else begin
+            if (rdEnIn) begin
+                if (hit) 
+                    indexLRU[index] = hitWay1;
+                else begin
+                    if (sramReadyIn) begin
+                        if (indexLRU[index] == 1'b1) begin
+                            indexLRU[index] <= 1'b0;
+                            {way0S[index], way0F[index]} <= sramReadDataIn;
+                            way0Valid[index] <= 1'b1;
+                            way0Tag[index] <= tag;
+                        end
+                        else begin
+                            indexLRU[index] <= 1'b1;
+                            {way1S[index], way1F[index]} <= sramReadDataIn;
+                            way1Valid[index] <= 1'b1;
+                            way1Tag[index] <= tag;
+                        end
+                    end
+                end
+            end
+
+            if (wrEnIn) begin
+                if (hitWay0) begin
+                    indexLRU[index] <= 1'b1;
+                    way0Valid[index] <= 1'b0;
+                end
+                else if (hitWay1) begin
+                    indexLRU[index] <= 1'b0;
+                    way1Valid[index] <= 1'b0;
+                end
+            end
         end
     end
 
