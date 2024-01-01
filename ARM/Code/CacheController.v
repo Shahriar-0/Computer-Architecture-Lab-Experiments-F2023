@@ -76,14 +76,6 @@ module CacheController(clk, rst, rdEnIn, wrEnIn, adrIn, wDataIn,
     assign sramWrEnOut = wrEnIn;
     // -----------------------------------------------------
 
-    always @(posedge clk) begin
-        
-    end
-
-    always @(posedge clk) begin
-        
-    end
-
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             way0Valid <= 64'd0;
