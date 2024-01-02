@@ -116,12 +116,14 @@ module CacheController(clk, rst, rdEnIn, wrEnIn, adrIn, wDataIn,
 
             if (wrEnIn) begin
                 if (hitWay0) begin
-                    indexLRU[index] <= 1'b1;
-                    way0Valid[index] <= 1'b0;
+                    indexLRU[index] <= 1'b0;
+                    if(offset[2] == 1'b0) way0F[index] <= wDataIn;
+                    else way0S[index] <= wDataIn;
                 end
                 else if (hitWay1) begin
-                    indexLRU[index] <= 1'b0;
-                    way1Valid[index] <= 1'b0;
+                    indexLRU[index] <= 1'b1;
+                    if(offset[2] == 1'b0) way1F[index] <= wDataIn;
+                    else way1S[index] <= wDataIn;
                 end
             end
         end
