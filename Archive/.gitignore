@@ -1,7 +1,0 @@
-.vscode/
-
-# ModelSim generated files
-work/
-*.mti
-*.mpf
-*.wlf
