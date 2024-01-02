@@ -1,2 +1,8 @@
-# Computer-Architecture-Lab-Experiments-F2024
-experiments done in the laboratory for computer architecture in the fall of 2024
+# Computer Architecture Lab Projects
+
+Implementing ARM processor in verilog for the computer architecture laboratory course at University of Tehran.
+
+- ARM Processor Implementation (ARM-1,..., ARM-4)
+- Forwarding Unit (ARM-5)
+- SRAM (ARM-6)
+- Cache Memory (ARM-7)
