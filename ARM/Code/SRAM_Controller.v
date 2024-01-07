@@ -31,7 +31,6 @@ module SramController(clk, rst, wrEnIn, rdEnIn, addressIn,
 
     wire [17:0] sramLowAddr, sramHighAddr, sramUpLowAddess, sramUpHighAddess;
     assign sramLowAddr = {memAddr[18:3], 2'd0};
-    // assign sramLowAddr = {memAddr[18:2], 1'b0};
     assign sramHighAddr = sramLowAddr + 18'd1;
     assign sramUpLowAddess = sramLowAddr + 18'd2;
     assign sramUpHighAddess = sramLowAddr + 18'd3;
