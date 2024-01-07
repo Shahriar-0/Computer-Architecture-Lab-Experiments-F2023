@@ -76,19 +76,28 @@ module CacheController(clk, rst, rdEnIn, wrEnIn, adrIn, wDataIn,
     assign sramWrEnOut = wrEnIn;
     // -----------------------------------------------------
 
+    // --------------------- Hit Rate ----------------------
+    reg[31:0] readCnt, hitCnt;    
+    // -----------------------------------------------------
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             way0Valid <= 64'd0;
             way1Valid <= 64'd0;
-            indexLRU <= 64'd0;
+            indexLRU  <= 64'd0;
+            readCnt   <= 32'b0;
+            hitCnt    <= 32'b0;
         end
 
         else begin
             if (rdEnIn) begin
-                if (hit) 
-                    indexLRU[index] = hitWay1;
+                if (hit) begin
+                    indexLRU[index] <= hitWay1;
+                    hitCnt  <= hitCnt  + 1;
+                    readCnt <= readCnt + 1;
+                end
                 else begin
                     if (sramReadyIn) begin
+                        readCnt <= readCnt + 1;
                         if (indexLRU[index] == 1'b1) begin
                             indexLRU[index] <= 1'b0;
                             {way0S[index], way0F[index]} <= sramReadDataIn;
@@ -107,12 +116,14 @@ module CacheController(clk, rst, rdEnIn, wrEnIn, adrIn, wDataIn,
 
             if (wrEnIn) begin
                 if (hitWay0) begin
-                    indexLRU[index] <= 1'b1;
-                    way0Valid[index] <= 1'b0;
+                    indexLRU[index] <= 1'b0;
+                    if(offset[2] == 1'b0) way0F[index] <= wDataIn;
+                    else way0S[index] <= wDataIn;
                 end
                 else if (hitWay1) begin
-                    indexLRU[index] <= 1'b0;
-                    way1Valid[index] <= 1'b0;
+                    indexLRU[index] <= 1'b1;
+                    if(offset[2] == 1'b0) way1F[index] <= wDataIn;
+                    else way1S[index] <= wDataIn;
                 end
             end
         end
