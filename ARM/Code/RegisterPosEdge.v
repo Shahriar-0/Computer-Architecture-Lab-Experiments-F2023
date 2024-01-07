@@ -1,10 +1,10 @@
 module RegisterPosEdge(in, clk, en, rst, out);
     parameter N = 32;
 
-    input [N-1:0] in;
+    input [N - 1:0] in;
     input clk, rst, en;
 
-    output reg [N-1:0] out;
+    output reg [N - 1:0] out;
     
     always @(posedge clk or posedge rst) begin
         if (rst)

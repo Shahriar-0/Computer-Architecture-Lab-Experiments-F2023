@@ -1,12 +1,9 @@
 module Instruction_Memory(PC, instruction);
 parameter N = 32;
 
-parameter Count = 1024;
-
 input [N - 1:0] PC;
 
 output reg [N - 1:0] instruction;
-
 
 wire [N - 1:0] adr;
 assign adr = {PC[N - 1:2], 2'b00}; 
