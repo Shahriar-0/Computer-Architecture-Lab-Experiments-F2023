@@ -11,7 +11,7 @@ module IF_Stage(clk, rst, freeze, branchTakenIn, PCOut, instructionOut, branchAd
         .a(32'd4), .b(PCRegOut), .out(PCPlus4)
     );
 
-    Mux2to1 #(32) muxPC(  // For updating PC value to branch address if branch is taken
+    Mux2to1 #(N) muxPC(  // For updating PC value to branch address if branch is taken
         .a(PCPlus4), .b(branchAddressIn), .s(branchTakenIn), .out(PCRegIn)
     ); 
 
