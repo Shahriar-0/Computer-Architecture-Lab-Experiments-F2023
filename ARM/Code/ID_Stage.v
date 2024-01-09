@@ -77,12 +77,12 @@ module ID_Stage(clk, rst, instructionIn, WB_ENIn, WB_DestIn, WB_ValueIn,
         .a(controlUnitOut), .b(9'b0), .s(controlSignalsSelector), .out(signals)
     );
 
-    assign EXE_CMDOut = signals[3:0];
-    assign SOut = signals[4];
-    assign BOut = signals[5];
+    assign EXE_CMDOut  = signals[3:0];
+    assign SOut        = signals[4];
+    assign BOut        = signals[5];
     assign MEM_W_ENOut = signals[6]; 
     assign MEM_R_ENOut = signals[7];
-    assign WB_ENOut = signals[8];
+    assign WB_ENOut    = signals[8];
     // -------------------------------------------------------
 
 
