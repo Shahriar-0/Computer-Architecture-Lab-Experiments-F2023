@@ -34,10 +34,10 @@ module Val2Generate(valRmIn, shiftOperandIn, IIn, STypeSignal, valOut);
         // ---------------------- Immediate Shifts -----------------------
         else begin 
             case (shift)
-                    2'b00: valOut = valRmIn << shift_imm;
-                    2'b01: valOut = valRmIn >> shift_imm;
-                    2'b10: valOut = $signed(valRmIn) >>> shift_imm;
-                    2'b11: begin
+                    2'b00: valOut = valRmIn << shift_imm;           // LSL
+                    2'b01: valOut = valRmIn >> shift_imm;           // LSR
+                    2'b10: valOut = $signed(valRmIn) >>> shift_imm; // ASR
+                    2'b11: begin                                    // ROR
                         valOut = valRmIn;
                         for (i = 0; i < shift_imm; i = i + 1) begin
                             valOut = {valOut[0], valOut[31:1]};
