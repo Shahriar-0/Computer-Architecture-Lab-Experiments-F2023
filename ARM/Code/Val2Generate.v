@@ -16,11 +16,14 @@ module Val2Generate(valRmIn, shiftOperandIn, IIn, STypeSignal, valOut);
 
     always @(valRmIn, shiftOperandIn, IIn, STypeSignal) begin
         valOut = 32'b0;
-        if (STypeSignal) begin  //LDR SDR
+        // -------------------------- LDR SDR ---------------------------
+        if (STypeSignal) begin  
             valOut = {{20{shiftOperandIn[11]}}, shiftOperandIn};
         end
 
-        else if (IIn) begin // 32-bit immediate
+
+        // ---------------------- 32-bit Immediate ----------------------
+        else if (IIn) begin // 
             valOut = {24'b0, immed_8};
             for (i = 0; i < 2 * rotate_imm; i = i + 1) begin
                 valOut = {valOut[0], valOut[31:1]};
@@ -28,7 +31,8 @@ module Val2Generate(valRmIn, shiftOperandIn, IIn, STypeSignal, valOut);
 
         end
 
-        else begin // immediate shifts
+        // ---------------------- Immediate Shifts -----------------------
+        else begin 
             case (shift)
                     2'b00: valOut = valRmIn << shift_imm;
                     2'b01: valOut = valRmIn >> shift_imm;
