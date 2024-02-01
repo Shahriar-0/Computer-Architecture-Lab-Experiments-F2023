@@ -11,14 +11,13 @@ module CPU(clk, rst, forwardENIn,
 
     wire[31:0] 
 		// IF IFR
-		IF_Pc, IFR_Pc, IF_Instr, IFR_Instr,
+		IF_Pc,    IFR_Pc,           IF_Instr,  IFR_Instr,
 		// ID IDR
-		IDR_Pc,  
-		ID_ValRn, IDR_ValRn, ID_ValRm, IDR_ValRm, 
+		IDR_Pc,   ID_ValRn,         IDR_ValRn, ID_ValRm,  IDR_ValRm, 
 		// EX EXR 
-		EX_Alu,  EX_BranchAddress, EXR_Alu, EXR_ValRm,
+		EX_Alu,   EX_BranchAddress, EXR_Alu,   EXR_ValRm,
 		// MEM MEMR
-		MEMR_Alu, MEMR_DataMemory, MEM_DataMemory,
+		MEMR_Alu, MEMR_DataMemory,  MEM_DataMemory,
 		// WB
 		WB_WriteBackValue;
 
@@ -60,21 +59,23 @@ module CPU(clk, rst, forwardENIn,
 		FW_SelSrc1, FW_SelSrc2;
 
 
+	// ----------------- IF Stage -----------------
 	IF_Stage instFetch(
 		.clk(clk), .rst(rst),               .freeze(HazardSignal | ~MEM_Ready),
 		.PCOut(IF_Pc),                      .instructionOut(IF_Instr),  
 		.branchAddressIn(EX_BranchAddress), .branchTakenIn(BranchTaken)
 	); 
 
-	
 	IF_Stage_Reg instFetchReg(
 		.clk(clk),                      .rst(rst), 
 		.en(~HazardSignal & MEM_Ready), .clr(BranchTaken), 
 		.instrIn(IF_Instr),             .instrOut(IFR_Instr), 
 		.PCIn(IF_Pc),                   .PCOut(IFR_Pc)
 	);
+	// ----------------- IF Stage -----------------
 
 
+	// ----------------- ID Stage -----------------
 	ID_Stage instDecode(
 		.clk(clk), .rst(rst),               
 		.instructionIn(IFR_Instr),   .WB_ENIn(WB_WriteBackEn),                 
@@ -89,7 +90,6 @@ module CPU(clk, rst, forwardENIn,
 		.src1Out(ID_Src1), 			 .shiftOperandOut(ID_ShiftOperand), .src2Out(ID_Src2)
 	);
 
-
 	HazardUnit hazardUnit(
 		.Src1In(ID_Src1),              .Src2In(ID_Src2), 
 		.TwoSrcIn(ID_TwoSrc),          .EXE_DestIn(IDR_Dest), 
@@ -97,7 +97,6 @@ module CPU(clk, rst, forwardENIn,
 		.MEM_WB_ENIn(EXR_WriteBackEn), .MEM_R_ENIn(IDR_MemReadEn), 
 		.forwardENIn(forwardENIn),     .HazardOut(HazardSignal)
 	);
-
 
 	ID_Stage_Reg instDecodeReg(
 		.clk(clk), .rst(rst),             .en(MEM_Ready), .clr(BranchTaken),
@@ -118,8 +117,9 @@ module CPU(clk, rst, forwardENIn,
  		.src1In(ID_Src1),   		      .src1Out(IDR_Src1),
 		.src2In(ID_Src2),   		      .src2Out(IDR_Src2)
 	);
+	// ----------------- ID Stage -----------------
 
-
+	// ----------------- EXE Stage -----------------
 	EXE_Stage execute(
 		.clk(clk), .rst(rst),                    
 		.MEM_R_ENIn(IDR_MemReadEn),         .MEM_W_ENIn(IDR_MemWriteEn), 
@@ -133,7 +133,6 @@ module CPU(clk, rst, forwardENIn,
 		.branchAddressOut(EX_BranchAddress)
 	);
 
-
 	EXE_Stage_Reg executeReg(
 		.clk(clk), .rst(rst),        .en(MEM_Ready), .clr(1'b0), 
 		.WB_ENIn(IDR_WriteBackEn),   .WB_ENOut(EXR_WriteBackEn), 
@@ -144,12 +143,13 @@ module CPU(clk, rst, forwardENIn,
 		.DestIn(IDR_Dest),           .DestOut(EXR_Dest)
 	);
 
-
 	StatusRegister statusRegister(
 		.clk(clk), .rst(rst), .en(IDR_s), 
 		.statIn(EX_Status),   .statOut(STAT_Out)
 	);
+	// ----------------- EXE Stage -----------------
 
+	// ----------------- MEM Stage -----------------
 	MEM_Stage memoryStage(
 		.clk(clk), .rst(rst),         .ALU_ResIn(EXR_Alu), 
 		.MEM_W_ENIn(EXR_MemWriteEN),  .MEM_R_ENIn(EXR_MemReadEn), 
@@ -160,7 +160,6 @@ module CPU(clk, rst, forwardENIn,
 		.SRAM_CE_NOut(MEM_SRAM_CE_N), .SRAM_OE_NOut(MEM_SRAM_OE_N)
 	);
 
-
 	MEM_Stage_Reg memoryReg(
 		.clk(clk), .rst(rst),          .clr(1'b0), .en(MEM_Ready), 
 		.WB_ENIn(EXR_WriteBackEn),     .WB_ENOut(MEMR_WriteBackEn), 
@@ -170,7 +169,6 @@ module CPU(clk, rst, forwardENIn,
 		.DestIn(EXR_Dest),             .DestOut(MEMR_Dest)
 	);
 
-
 	ForwardingUnit forward(
 		.forwardEnIn(forwardENIn), 
 		.src1In(IDR_Src1), 			   	     .src2In(IDR_Src2), 
@@ -178,8 +176,9 @@ module CPU(clk, rst, forwardENIn,
 		.MEM_MEMR_DestIn(EXR_Dest),   		 .WB_ID_WB_DestIn(WB_Dest), 
 		.selSrc1Out(FW_SelSrc1), 		     .selSrc2Out(FW_SelSrc2)
 	);
+	// ----------------- MEM Stage -----------------
 
-
+	// ----------------- WB Stage -----------------
 	WB_Stage writeBack(
 		.clk(clk), .rst(rst),           
 		.ALU_ResIn(MEMR_Alu),        .DataMemoryIn(MEMR_DataMemory), 
@@ -187,5 +186,6 @@ module CPU(clk, rst, forwardENIn,
 		.WB_ENIn(MEMR_WriteBackEn),  .WB_DestOut(WB_Dest),     
 		.WB_ENOut(WB_WriteBackEn),   .WB_ValueOut(WB_WriteBackValue)
 	);
+	// ----------------- WB Stage -----------------
 
 endmodule
